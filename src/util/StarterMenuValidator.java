@@ -3,13 +3,13 @@ package util;
 public class StarterMenuValidator {
 
     public static boolean isValidNumericInput(String number) {
-        return number.matches("\\d+"); // Verifica se é um número positivo
+        return number.matches("\\d+");
     }
 
     public static boolean isValidPositiveNumber(String number) {
         if (isValidNumericInput(number)) {
             int num = Integer.parseInt(number);
-            return num > 0; // Deve ser maior que zero
+            return num > 0;
         }
         return false;
     }
