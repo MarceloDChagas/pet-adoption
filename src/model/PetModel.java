@@ -2,8 +2,10 @@ package model;
 
 import util.Adress;
 import util.Constants;
+import util.PetSex;
+import util.PetType;
 
-public class PetModel {
+public class PetModel{
     private String name;
     private String lastName;
     private PetType type;

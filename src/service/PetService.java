@@ -1,8 +1,8 @@
 package service;
 
 import model.PetModel;
-import model.PetSex;
-import model.PetType;
+import util.PetSex;
+import util.PetType;
 import util.PetValidator;
 import util.Adress;
 import util.Constants;

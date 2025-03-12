@@ -14,7 +14,6 @@ public class Adress {
         this.street = street;
     }
 
-
     public String getHouseNumber() {
         return houseNumber;
     }
@@ -37,5 +36,12 @@ public class Adress {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    @Override
+    public String toString() {
+        return "Rua " + street  +
+                ", " + houseNumber +
+                ", " + city ;
     }
 }
