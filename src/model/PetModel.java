@@ -93,4 +93,16 @@ public class PetModel{
     public void setBreed(String breed) {
         this.breed = breed;
     }
+
+    @Override
+    public String toString() {
+        return  name  + " - "
+                + type + " - "
+                + sex + " - "
+                + adress.toString() + " - "
+                + age + " anos - "
+                + weight + " - "
+                + breed;
+
+    }
 }

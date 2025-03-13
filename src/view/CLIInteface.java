@@ -1,9 +1,15 @@
 package view;
 import java.util.Scanner;
+
+import service.PetService;
+import util.Adress;
+import util.PetSex;
+import util.PetType;
 import util.StarterMenuValidator;
 
 public class CLIInteface {
     public static void showStarterMenu() {
+        PetService petService = new PetService();
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -27,7 +33,7 @@ public class CLIInteface {
 
             switch (option) {
                 case 1:
-                    System.out.println("Adding a pet...");
+                    petService.createPet("Ximbinha", "Da Silva", PetType.DOG, PetSex.FEMALE, "2", "4.5f", new Adress("123", "Belo jardim", "Centro"), "Poodle");
                     break;
                 case 2:
                     System.out.println("Updating a pet...");
@@ -36,10 +42,11 @@ public class CLIInteface {
                     System.out.println("Deleting a pet...");
                     break;
                 case 4:
-                    System.out.println("Showing all pets...");
+                    petService.findAllPets();
                     break;
                 case 5:
-                    System.out.println("Showing pets with filters...");
+                    petService.findPet("Ximbinha");
+                    petService.findPet("Da Silva", "Poodle");
                     break;
                 case 6:
                     System.out.println("Exiting...");

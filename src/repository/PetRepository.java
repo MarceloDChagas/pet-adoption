@@ -4,9 +4,7 @@ import model.PetModel;
 import util.FileManage;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class PetRepository {
     private final FileManage fileManage;
@@ -16,12 +14,10 @@ public class PetRepository {
         this.fileManage = new FileManage();
     }
 
-    // Método para salvar o pet em um arquivo .txt com o nome formatado
     public void savePetToFile(PetModel pet) {
         String formattedFileName = getFormattedFileName(pet);
-        String filePath = "petsCadastrados/" + formattedFileName; // Caminho completo do arquivo
+        String filePath = "petsCadastrados/" + formattedFileName;
 
-        // Criação do conteúdo do arquivo (informações do pet)
         String petInfo = "Nome: " + pet.getName() + "\n " +
                 "Sobrenome: " + pet.getLastName() + "\n" +
                 "Raça: " + pet.getBreed() + "\n" +
@@ -29,42 +25,52 @@ public class PetRepository {
                 "Sexo: " + pet.getSex() + "\n" +
                 "Idade: " + pet.getAge() + "\n" +
                 "Peso: " + pet.getWeight() + "\n" +
-                "Endereço: " + pet.getAdress().toString(); // Aqui você pode customizar o endereço como quiser
+                "Endereço: " + pet.getAdress().toString();
 
-        // Salva o conteúdo no arquivo .txt
         fileManage.writeFile(filePath, petInfo);
     }
 
-    // Método para gerar o nome formatado do arquivo com base na data e no nome do pet
     private String getFormattedFileName(PetModel pet) {
-        // Obtém a data e hora atual
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmm");
         String dateTime = sdf.format(new Date());
-
-        // Formata o nome do arquivo
         String fileName = dateTime + "-" + pet.getName().toUpperCase() + pet.getLastName().toUpperCase() + ".TXT";
 
         return fileName;
     }
 
-    // Método para obter todos os pets do arquivo
-    public List<PetModel> getAllPets() {
-        List<PetModel> pets = fileManage.readObjectFile(petsFilePath); // Lê a lista de pets do arquivo
-        if (pets == null) {
-            pets = new ArrayList<>(); // Se não houver nenhum pet, cria uma lista vazia
-        }
-        return pets;
+    public Map<String, List<String>> getAllPets() {
+        Map<String, List<String>> filesData = fileManage.loadFilesToMap(petsFilePath);
+        return filesData;
     }
 
-    // Método para verificar se o pet já está cadastrado
-    public boolean isPetRegistered(PetModel pet) {
-        List<PetModel> pets = getAllPets();
-        for (PetModel existingPet : pets) {
-            // Você pode usar algum critério único, como o nome, para verificar se o pet já está registrado
-            if (existingPet.getName().equals(pet.getName())) {
-                return true;
+    public Map<String, List<String>> getPetByFilter(String filter) {
+        Map<String, List<String>> filesData = fileManage.loadFilesToMap(petsFilePath);
+        Map<String, List<String>> filesDataFiltered = new HashMap<>();
+
+        for (Map.Entry<String, List<String>> entry : filesData.entrySet()) {
+            for (String line : entry.getValue()) {
+                if (line.toLowerCase().contains(filter.toLowerCase())) {
+                    filesDataFiltered.put(entry.getKey(), entry.getValue());
+                    break;
+                }
             }
         }
-        return false;
+        return filesDataFiltered;
     }
+
+    public Map<String, List<String>> getPetByFilter(String filter, String secondFilter) {
+        Map<String, List<String>> filesData = fileManage.loadFilesToMap(petsFilePath);
+        Map<String, List<String>> filesDataFiltered = new HashMap<>();
+
+        for (Map.Entry<String, List<String>> entry : filesData.entrySet()) {
+            for (String line : entry.getValue()) {
+                if (line.toLowerCase().contains(filter.toLowerCase()) && line.toLowerCase().contains(secondFilter.toLowerCase())) {
+                    filesDataFiltered.put(entry.getKey(), entry.getValue());
+                    break;
+                }
+            }
+        }
+        return filesDataFiltered;
+    }
+
 }
