@@ -2,16 +2,13 @@ package service;
 
 import model.PetModel;
 import repository.PetRepository;
-import util.PetSex;
-import util.PetType;
-import util.PetValidator;
-import util.Adress;
-import util.Constants;
+import util.*;
 import util.exceptions.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import util.TextHighlighter;
+
 
 public class PetService {
 
@@ -79,7 +76,9 @@ public class PetService {
         } else {
             int index = 1;
             for (PetModel pet : pets) {
-                System.out.println(index + ". " + pet.toString());
+                String output = pet.toString();
+                output = TextHighlighter.highlightTerm(output, filter);
+                System.out.println(index + ". " + output);
                 index++;
             }
         }
@@ -94,19 +93,21 @@ public class PetService {
         } else {
             int index = 1;
             for (PetModel pet : pets) {
-                System.out.println(index + ". " + pet.toString());
+                String output = pet.toString();
+                output = TextHighlighter.highlightTerm(output, filter);
+                output = TextHighlighter.highlightTerm(output, secondFilter);
+                System.out.println(index + ". " + output);
                 index++;
             }
         }
     }
-
 
     private List<PetModel> parsePetData(Map<String, List<String>> filesData) {
         List<PetModel> pets = new ArrayList<>();
         for (List<String> fileLines : filesData.values()) {
             List<String> petData = new ArrayList<>();
             for (String line : fileLines) {
-                if (line.trim().isEmpty()) { // Nova linha separa os pets
+                if (line.trim().isEmpty()) {
                     if (!petData.isEmpty()) {
                         PetModel pet = parseLineToPet(petData);
                         if (pet != null) {
@@ -118,7 +119,6 @@ public class PetService {
                     petData.add(line);
                 }
             }
-            // Adiciona o último pet se não houver uma linha em branco no final
             if (!petData.isEmpty()) {
                 PetModel pet = parseLineToPet(petData);
                 if (pet != null) {
@@ -128,7 +128,6 @@ public class PetService {
         }
         return pets;
     }
-
 
     private PetModel parseLineToPet(List<String> lines) {
         try {
@@ -148,7 +147,7 @@ public class PetService {
 
             return new PetModel(name, lastName, type, sex, age, weight, new Adress(houseNumber, city, street), breed);
         } catch (Exception e) {
-            System.out.println("❌ Erro ao converter linhas para PetModel: " + lines);
+            System.out.println("Erro ao converter linhas para PetModel: " + lines);
             e.printStackTrace();
             return null;
         }
@@ -163,4 +162,31 @@ public class PetService {
         return Constants.DEFAULT_UNINFORMED;
     }
 
+    public List<PetModel> findPetByDate(String date) {
+        Map<String, List<String>> filesData = repository.getPetByDate(date);
+        return parsePetData(filesData);
+    }
+
+    public List<PetModel> findPetByDateWithFilter(String date, String filter) {
+        Map<String, List<String>> filesData = repository.getPetByDateWithFilter(date, filter);
+        List<PetModel> pets = parsePetData(filesData);
+        for (int i = 0; i < pets.size(); i++) {
+            String output = pets.get(i).toString();
+            output = TextHighlighter.highlightTerm(output, filter);
+            System.out.println((i+1) + ". " + output);
+        }
+        return pets;
+    }
+
+    public List<PetModel> findPetByDateWithFilter(String date, String filter, String secondFilter) {
+        Map<String, List<String>> filesData = repository.getPetByDateWithFilter(date, filter, secondFilter);
+        List<PetModel> pets = parsePetData(filesData);
+        for (int i = 0; i < pets.size(); i++) {
+            String output = pets.get(i).toString();
+            output = TextHighlighter.highlightTerm(output, filter);
+            output = TextHighlighter.highlightTerm(output, secondFilter);
+            System.out.println((i+1) + ". " + output);
+        }
+        return pets;
+    }
 }

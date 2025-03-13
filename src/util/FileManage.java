@@ -89,5 +89,26 @@ public class FileManage {
         return fileContents;
     }
 
+    public File[] getFileNames(String directoryPath) {
+        File directory = new File(directoryPath);
 
+        if (!directory.exists() || !directory.isDirectory()) {
+            System.err.println("Erro: O diretório não existe ou não é válido -> " + directoryPath);
+            return new File[0];
+        }
+
+        File[] files = directory.listFiles();
+        if (files == null || files.length == 0) {
+            System.out.println("Nenhum arquivo encontrado no diretório -> " + directoryPath);
+            return files;
+        }
+
+        System.out.println("Arquivos encontrados no diretório:");
+        for (File file : files) {
+            if (file.isFile() && file.getName().toLowerCase().endsWith(".txt")) {
+                System.out.println(file.getName());
+            }
+        }
+        return files;
+    }
 }
