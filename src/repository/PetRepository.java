@@ -3,6 +3,7 @@ package repository;
 import model.PetModel;
 import util.FileManage;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -16,9 +17,9 @@ public class PetRepository {
 
     public void savePetToFile(PetModel pet) {
         String formattedFileName = getFormattedFileName(pet);
-        String filePath = "petsCadastrados/" + formattedFileName;
+        String filePath = "src/petsCadastrados/" + formattedFileName;
 
-        String petInfo = "Nome: " + pet.getName() + "\n " +
+        String petInfo = "Nome: " + pet.getName() + "\n" +
                 "Sobrenome: " + pet.getLastName() + "\n" +
                 "Raça: " + pet.getBreed() + "\n" +
                 "Tipo: " + pet.getType() + "\n" +
@@ -119,4 +120,32 @@ public class PetRepository {
         return filesDataFiltered;
     }
 
+
+    public boolean deletePetFile(String fileName) {
+        String fullPath = petsFilePath + fileName;
+        File file = new File(fullPath);
+
+        if (file.exists()) {
+            boolean deleted = file.delete();
+            if (deleted) {
+                System.out.println("Arquivo deletado com sucesso: " + fileName);
+                return true;
+            } else {
+                System.out.println("Falha ao deletar o arquivo: " + fileName);
+                return false;
+            }
+        } else {
+            System.out.println("Arquivo não encontrado: " + fileName);
+            return false;
+        }
+    }
+
+    public List<String> getAllFileNames() {
+        System.out.println("Buscando arquivos no diretório: " + petsFilePath);
+        for (String fileName : fileManage.getAllFileNames(petsFilePath)) {
+            System.out.println(fileName);
+        }
+        return fileManage.getAllFileNames(petsFilePath);
+    }
 }
+

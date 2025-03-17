@@ -1,8 +1,0 @@
-Nome: Caquinha
- Sobrenome: Da Silva
-Raça: Poodle
-Tipo: DOG
-Sexo: FEMALE
-Idade: 2
-Peso: 4.5
-Endereço: Rua Centro, 123, Belo jardim

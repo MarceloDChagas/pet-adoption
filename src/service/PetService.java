@@ -5,6 +5,7 @@ import repository.PetRepository;
 import util.*;
 import util.exceptions.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import util.TextHighlighter;
@@ -23,6 +24,49 @@ public class PetService {
         float weight = validateWeight(weightInput);
         validateBreed(breed);
         repository.savePetToFile(new PetModel(name, lastName, type, sex, age, weight, adress, breed));
+    }
+
+    public void updatePet(PetModel updatedPet) {
+        repository.savePetToFile(updatedPet);
+    }
+
+    public List<PetModel> findPet(String filter) {
+        Map<String, List<String>> filesData = repository.getPetByFilter(filter);
+        List<PetModel> pets = parsePetData(filesData);
+
+        if (pets.isEmpty()) {
+            System.out.println("Nenhum pet encontrado com o filtro: " + filter);
+        } else {
+            int index = 1;
+            for (PetModel pet : pets) {
+                String output = pet.toString();
+                output = TextHighlighter.highlightTerm(output, filter);
+                System.out.println(index + ". " + output);
+                index++;
+            }
+        }
+
+        return pets;
+    }
+
+    public List<PetModel> findPet(String filter, String secondFilter) {
+        Map<String, List<String>> filesData = repository.getPetByFilter(filter, secondFilter);
+        List<PetModel> pets = parsePetData(filesData);
+
+        if (pets.isEmpty()) {
+            System.out.println("Nenhum pet encontrado com os filtros: " + filter + " e " + secondFilter);
+        } else {
+            int index = 1;
+            for (PetModel pet : pets) {
+                String output = pet.toString();
+                output = TextHighlighter.highlightTerm(output, filter);
+                output = TextHighlighter.highlightTerm(output, secondFilter);
+                System.out.println(index + ". " + output);
+                index++;
+            }
+        }
+
+        return pets;
     }
 
     private int validateAge(String ageInput) {
@@ -52,65 +96,40 @@ public class PetService {
         PetValidator.isValidBreed(breed);
     }
 
-    public void findAllPets() {
+    public List<PetModel> findAllPets() {
         Map<String, List<String>> filesData = repository.getAllPets();
         List<PetModel> pets = parsePetData(filesData);
 
         if (pets.isEmpty()) {
             System.out.println("Nenhum pet cadastrado.");
         } else {
+            // Ordena os pets alfabeticamente pelo nome
+            pets.sort(Comparator.comparing(PetModel::getName, String.CASE_INSENSITIVE_ORDER));
+
             int index = 1;
             for (PetModel pet : pets) {
                 System.out.println(index + ". " + pet.toString());
                 index++;
             }
         }
-    }
 
-    public void findPet(String filter) {
-        Map<String, List<String>> filesData = repository.getPetByFilter(filter);
-        List<PetModel> pets = parsePetData(filesData);
-
-        if (pets.isEmpty()) {
-            System.out.println("Nenhum pet encontrado com o filtro: " + filter);
-        } else {
-            int index = 1;
-            for (PetModel pet : pets) {
-                String output = pet.toString();
-                output = TextHighlighter.highlightTerm(output, filter);
-                System.out.println(index + ". " + output);
-                index++;
-            }
-        }
-    }
-
-    public void findPet(String filter, String secondFilter) {
-        Map<String, List<String>> filesData = repository.getPetByFilter(filter, secondFilter);
-        List<PetModel> pets = parsePetData(filesData);
-
-        if (pets.isEmpty()) {
-            System.out.println("Nenhum pet encontrado com os filtros: " + filter + " e " + secondFilter);
-        } else {
-            int index = 1;
-            for (PetModel pet : pets) {
-                String output = pet.toString();
-                output = TextHighlighter.highlightTerm(output, filter);
-                output = TextHighlighter.highlightTerm(output, secondFilter);
-                System.out.println(index + ". " + output);
-                index++;
-            }
-        }
+        return pets;
     }
 
     private List<PetModel> parsePetData(Map<String, List<String>> filesData) {
         List<PetModel> pets = new ArrayList<>();
-        for (List<String> fileLines : filesData.values()) {
+        for (Map.Entry<String, List<String>> entry : filesData.entrySet()) {
+            String filename = entry.getKey();
+            List<String> fileLines = entry.getValue();
+
             List<String> petData = new ArrayList<>();
             for (String line : fileLines) {
                 if (line.trim().isEmpty()) {
                     if (!petData.isEmpty()) {
                         PetModel pet = parseLineToPet(petData);
                         if (pet != null) {
+                            // Store the filename as a property of the pet for later update/delete operations
+                            pet.setSourceFilename(filename);
                             pets.add(pet);
                         }
                         petData.clear();
@@ -122,6 +141,8 @@ public class PetService {
             if (!petData.isEmpty()) {
                 PetModel pet = parseLineToPet(petData);
                 if (pet != null) {
+                    // Store the filename as a property of the pet for later update/delete operations
+                    pet.setSourceFilename(filename);
                     pets.add(pet);
                 }
             }
@@ -164,29 +185,57 @@ public class PetService {
 
     public List<PetModel> findPetByDate(String date) {
         Map<String, List<String>> filesData = repository.getPetByDate(date);
-        return parsePetData(filesData);
+        List<PetModel> pets = parsePetData(filesData);
+
+        if (pets.isEmpty()) {
+            System.out.println("Nenhum pet encontrado para a data: " + date);
+        } else {
+            System.out.println("Pets encontrados para a data " + date + ":");
+            int index = 1;
+            for (PetModel pet : pets) {
+                System.out.println(index + ". " + pet.toString());
+                index++;
+            }
+        }
+
+        return pets;
     }
 
     public List<PetModel> findPetByDateWithFilter(String date, String filter) {
         Map<String, List<String>> filesData = repository.getPetByDateWithFilter(date, filter);
         List<PetModel> pets = parsePetData(filesData);
-        for (int i = 0; i < pets.size(); i++) {
-            String output = pets.get(i).toString();
-            output = TextHighlighter.highlightTerm(output, filter);
-            System.out.println((i+1) + ". " + output);
+
+        if (pets.isEmpty()) {
+            System.out.println("Nenhum pet encontrado para a data " + date + " com o filtro " + filter);
+        } else {
+            System.out.println("Pets encontrados para a data " + date + " com o filtro " + filter + ":");
+            for (int i = 0; i < pets.size(); i++) {
+                String output = pets.get(i).toString();
+                output = TextHighlighter.highlightTerm(output, filter);
+                System.out.println((i+1) + ". " + output);
+            }
         }
+
         return pets;
     }
 
     public List<PetModel> findPetByDateWithFilter(String date, String filter, String secondFilter) {
         Map<String, List<String>> filesData = repository.getPetByDateWithFilter(date, filter, secondFilter);
         List<PetModel> pets = parsePetData(filesData);
-        for (int i = 0; i < pets.size(); i++) {
-            String output = pets.get(i).toString();
-            output = TextHighlighter.highlightTerm(output, filter);
-            output = TextHighlighter.highlightTerm(output, secondFilter);
-            System.out.println((i+1) + ". " + output);
+
+        if (pets.isEmpty()) {
+            System.out.println("Nenhum pet encontrado para a data " + date + " com os filtros " + filter + " e " + secondFilter);
+        } else {
+            System.out.println("Pets encontrados para a data " + date + " com os filtros " + filter + " e " + secondFilter + ":");
+            for (int i = 0; i < pets.size(); i++) {
+                String output = pets.get(i).toString();
+                output = TextHighlighter.highlightTerm(output, filter);
+                output = TextHighlighter.highlightTerm(output, secondFilter);
+                System.out.println((i+1) + ". " + output);
+            }
         }
+
         return pets;
     }
+
 }

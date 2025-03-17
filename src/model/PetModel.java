@@ -14,6 +14,7 @@ public class PetModel{
     private float weight;
     private Adress adress;
     private String breed;
+    private String sourceFilename;
 
     public PetModel(String name, String lastName, PetType type, PetSex sex, int age, float weight, Adress adress, String breed) {
         this.name = (name == null || name.trim().isEmpty()) ? Constants.DEFAULT_UNINFORMED : name.trim();
@@ -94,6 +95,14 @@ public class PetModel{
         this.breed = breed;
     }
 
+    public String getSourceFilename() {
+        return sourceFilename;
+    }
+
+    public void setSourceFilename(String sourceFilename) {
+        this.sourceFilename = sourceFilename;
+    }
+
     @Override
     public String toString() {
         return  name  + " - "
@@ -103,6 +112,5 @@ public class PetModel{
                 + age + " anos - "
                 + weight + " - "
                 + breed;
-
     }
 }

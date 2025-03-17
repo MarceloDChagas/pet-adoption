@@ -1,10 +1,7 @@
 package util;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FileManage {
 
@@ -78,6 +75,7 @@ public class FileManage {
             System.out.println("Nenhum arquivo encontrado no diretório -> " + directoryPath);
             return fileContents;
         }
+        Arrays.sort(files, Comparator.comparing(File::getName));
 
         for (File file : files) {
             if (file.isFile() && file.getName().toLowerCase().endsWith(".txt")) {
@@ -89,26 +87,25 @@ public class FileManage {
         return fileContents;
     }
 
-    public File[] getFileNames(String directoryPath) {
+    public List<String> getAllFileNames(String directoryPath) {
         File directory = new File(directoryPath);
+        List<String> fileNames = new ArrayList<>();
 
         if (!directory.exists() || !directory.isDirectory()) {
             System.err.println("Erro: O diretório não existe ou não é válido -> " + directoryPath);
-            return new File[0];
+            return fileNames;
         }
 
-        File[] files = directory.listFiles();
-        if (files == null || files.length == 0) {
-            System.out.println("Nenhum arquivo encontrado no diretório -> " + directoryPath);
-            return files;
-        }
+        File[] files = directory.listFiles((dir, name) -> name.toLowerCase().endsWith(".txt"));
 
-        System.out.println("Arquivos encontrados no diretório:");
-        for (File file : files) {
-            if (file.isFile() && file.getName().toLowerCase().endsWith(".txt")) {
-                System.out.println(file.getName());
+        if (files != null) {
+            for (File file : files) {
+                fileNames.add(file.getName());
             }
         }
-        return files;
+
+        return fileNames;
     }
+
+
 }

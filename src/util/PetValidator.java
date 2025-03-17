@@ -1,7 +1,6 @@
 package util;
 
 import util.exceptions.*;
-import util.Constants;
 
 public class PetValidator {
 
