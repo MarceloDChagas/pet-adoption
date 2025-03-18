@@ -1,13 +1,13 @@
 package repository;
 
 import model.PetModel;
+import repository.interfaces.IPetRepository;
 import util.FileManage;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class PetRepository {
+public class PetRepository implements IPetRepository {
     private final FileManage fileManage;
     private final String petsFilePath = "C:\\Users\\Telo\\IdeaProjects\\pet-adoption\\src\\petsCadastrados\\"; // Caminho para o arquivo de objetos binários
 

@@ -2,6 +2,7 @@ package service;
 
 import model.PetModel;
 import repository.PetRepository;
+import service.interfaces.IPetService;
 import util.*;
 import util.exceptions.*;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-public class PetService {
+public class PetService implements IPetService {
     private final PetRepository repository;
 
     public PetService() {
@@ -53,7 +54,7 @@ public class PetService {
         return parsePetData(repository.getPetByDateWithFilter(date, filter, secondFilter));
     }
 
-    private String findPetFile(PetModel selectedPet, PetRepository petRepository) {
+    public String findPetFile(PetModel selectedPet, PetRepository petRepository) {
         for (String fileName : petRepository.getAllFileNames()) {
             String[] parts = fileName.split("-");
             if (parts.length > 1) {
@@ -77,7 +78,7 @@ public class PetService {
         if (adress != null) pet.setAdress(adress);
     }
 
-    private List<PetModel> parsePetData(Map<String, List<String>> filesData) {
+    public List<PetModel> parsePetData(Map<String, List<String>> filesData) {
         List<PetModel> pets = new ArrayList<>();
         for (Map.Entry<String, List<String>> entry : filesData.entrySet()) {
             String filename = entry.getKey();
@@ -109,7 +110,7 @@ public class PetService {
         return pets;
     }
 
-    private PetModel parseLineToPet(List<String> lines) {
+    public PetModel parseLineToPet(List<String> lines) {
         try {
             String name = extractValue(lines, "Nome:");
             String lastName = extractValue(lines, "Sobrenome:");
@@ -148,7 +149,7 @@ public class PetService {
         return false;
     }
 
-    private String extractValue(List<String> lines, String prefix) {
+    public String extractValue(List<String> lines, String prefix) {
         for (String line : lines) {
             if (line.startsWith(prefix)) {
                 return line.replace(prefix, "").trim();
@@ -157,7 +158,7 @@ public class PetService {
         return Constants.DEFAULT_UNINFORMED;
     }
 
-    private int validateAge(String ageInput) {
+    public int validateAge(String ageInput) {
         try {
             int age = Integer.parseInt(ageInput.trim());
             PetValidator.validateAge(age);
@@ -167,7 +168,7 @@ public class PetService {
         }
     }
 
-    private float validateWeight(String weightInput) {
+    public float validateWeight(String weightInput) {
         try {
             float weight = Float.parseFloat(weightInput.trim());
             PetValidator.isValidWeight(weight);
@@ -177,7 +178,7 @@ public class PetService {
         }
     }
 
-    private void validateBreed(String breed) {
+    public void validateBreed(String breed) {
         if (breed == null || breed.trim().isEmpty()) {
             breed = Constants.DEFAULT_UNINFORMED;
         }
