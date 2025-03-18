@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import model.PetModel;
-import repository.PetRepository;
 import service.PetService;
 import util.Adress;
 import util.PetSex;
@@ -37,7 +36,7 @@ public class CLIInterface {
                 case 1 -> addPet();
                 case 2 -> searchAndUpdatePet();
                 case 3 -> deletePet();
-                case 4 -> petService.findAllPets();
+                case 4 -> findAllPets();
                 case 5 -> filterPets();
                 case 6 -> {
                     System.out.println("Exiting...");
@@ -49,23 +48,58 @@ public class CLIInterface {
     }
 
     private static void addPet() {
-        petService.createPet("flo", "Da Silva", PetType.DOG, PetSex.FEMALE, "2", "4.5", new Adress("123", "Belo jardim", "Centro"), "Poodle");
+        System.out.println("\n=== Add a New Pet ===");
+
+        String name = getUserInput("Enter pet name: ");
+        String lastName = getUserInput("Enter pet last name: ");
+        PetType type = getEnumValue(PetType.class, "Select pet type: ");
+        PetSex sex = getEnumValue(PetSex.class, "Select pet sex: ");
+        String ageInput = getUserInput("Enter pet age: ");
+        String weightInput = getUserInput("Enter pet weight: ");
+        String breed = getUserInput("Enter pet breed: ");
+        String street = getUserInput("Enter address street: ");
+        String houseNumber = getUserInput("Enter house number: ");
+        String city = getUserInput("Enter city: ");
+
+        Adress address = new Adress(houseNumber, city, street);
+
+        petService.createPet(name, lastName, type, sex, ageInput, weightInput, address, breed);
+
+        System.out.println("Pet added successfully!");
+    }
+
+    private static void findAllPets(){
+        printAllPets(petService.findAllPets());
+    }
+
+    private static void printAllPets(List <PetModel> pets){
+        for (PetModel pet : pets){
+            System.out.println(pet);
+        }
     }
 
     private static void deletePet() {
-        System.out.print("Enter the name of the pet to delete: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter the last name of the pet: ");
-        String lastName = scanner.nextLine();
+        String name = getUserInput("Enter the name of the pet to delete: ");
+        String lastName = getUserInput("Enter the last name of the pet: ");
 
-        PetRepository petRepository = new PetRepository();
-        String petFile = findPetFile(new PetModel(name, lastName, null, null, 0, 0, null, null), petRepository);
+        boolean deleted = petService.deletePetByNameAndLastName(name, lastName);
 
-        if (petFile != null) {
-            petRepository.deletePetFile(petFile);
+        if (deleted) {
             System.out.println("Pet deleted successfully.");
         } else {
-            System.out.println("Pet file not found.");
+            System.out.println("Pet not found.");
+        }
+    }
+    private static void deletePet(PetModel petToUpdate) {
+        String name = petToUpdate.getName();
+        String lastName = petToUpdate.getLastName();
+
+        boolean deleted = petService.deletePetByNameAndLastName(name, lastName);
+
+        if (deleted) {
+            System.out.println("Pet deleted successfully.");
+        } else {
+            System.out.println("Pet not found.");
         }
     }
 
@@ -89,18 +123,10 @@ public class CLIInterface {
             System.out.println("No pet selected.");
             return;
         }
-
-        System.out.println("Pet selected: " + selectedPet.getName());
-        PetRepository petRepository = new PetRepository();
-        String petFile = findPetFile(selectedPet, petRepository);
-
-        if (petFile != null) {
-            petRepository.deletePetFile(petFile);
-            updatePetDetails(selectedPet);
-            petRepository.savePetToFile(selectedPet);
-        } else {
-            System.out.println("Pet file not found.");
-        }
+        deletePet(selectedPet);
+        updatePetDetails(selectedPet);
+        petService.updatePet(selectedPet);
+        System.out.println("Pet details updated successfully.");
     }
 
     private static List<PetModel> getSearchResults() {
@@ -119,18 +145,9 @@ public class CLIInterface {
             }
 
             return switch (Integer.parseInt(choice)) {
-                case 1 -> {
-                    System.out.print("Enter pet name to search: ");
-                    yield petService.findPet(scanner.nextLine());
-                }
-                case 2 -> {
-                    System.out.print("Enter date (YYYYMMDD): ");
-                    yield petService.findPetByDate(scanner.nextLine());
-                }
-                case 3 -> {
-                    System.out.print("Enter breed to search: ");
-                    yield petService.findPet(scanner.nextLine());
-                }
+                case 1 -> petService.findPet(getUserInput("Enter pet name to search: "));
+                case 2 -> petService.findPetByDate(getUserInput("Enter date (YYYYMMDD): "));
+                case 3 -> petService.findPet(getUserInput("Enter breed to search: "));
                 case 4 -> null;
                 default -> {
                     System.out.println("Invalid choice.");
@@ -140,66 +157,31 @@ public class CLIInterface {
         }
     }
 
-    private static String findPetFile(PetModel selectedPet, PetRepository petRepository) {
-        for (String fileName : petRepository.getAllFileNames()) {
-            System.out.println("File name: " + fileName);
-
-            // Extrai a parte do nome após o último "-"
-            String[] parts = fileName.split("-");
-            if (parts.length > 1) {
-                String extractedName = parts[1].replace(".TXT", "").trim(); // Remove a extensão e espaços extras
-                System.out.println("Extracted name: " + extractedName);
-
-                String fullPetName = selectedPet.getName() + selectedPet.getLastName()  ;
-                System.out.println("Selected pet: " + fullPetName);
-
-                if (extractedName.equalsIgnoreCase(fullPetName)) {
-                    System.out.println("Matching file found: " + fileName);
-                    return fileName;
-                }
-            }
-        }
-        return null;
-    }
-
     private static void updatePetDetails(PetModel pet) {
         System.out.println("\n=== Update Pet Details ===");
 
-        System.out.print("Enter new name (" + pet.getName() + "): ");
-        String name = scanner.nextLine().trim();
-        if (!name.isEmpty()) pet.setName(name);
+        pet.setName(getUpdatedValue("Enter new name", pet.getName()));
+        pet.setLastName(getUpdatedValue("Enter new last name", pet.getLastName()));
+        pet.setBreed(getUpdatedValue("Enter new breed", pet.getBreed()));
 
-        System.out.print("Enter new last name (" + pet.getLastName() + "): ");
-        String lastName = scanner.nextLine().trim();
-        if (!lastName.isEmpty()) pet.setLastName(lastName);
+        String ageInput = getUpdatedValue("Enter new age", String.valueOf(pet.getAge()));
+        if (!ageInput.isEmpty()) {
+            try {
+                pet.setAge(Integer.parseInt(ageInput));
+            } catch (NumberFormatException ignored) {}
+        }
 
-        System.out.print("Enter new breed (" + pet.getBreed() + "): ");
-        String breed = scanner.nextLine().trim();
-        if (!breed.isEmpty()) pet.setBreed(breed);
+        String weightInput = getUpdatedValue("Enter new weight", String.valueOf(pet.getWeight()));
+        if (!weightInput.isEmpty()) {
+            try {
+                pet.setWeight(Float.parseFloat(weightInput));
+            } catch (NumberFormatException ignored) {}
+        }
 
-        System.out.print("Enter new age (" + pet.getAge() + "): ");
-        String age = scanner.nextLine().trim();
-        if (!age.isEmpty()) pet.setAge(Integer.parseInt(age));
-
-        System.out.print("Enter new weight (" + pet.getWeight() + "): ");
-        String weight = scanner.nextLine().trim();
-        if (!weight.isEmpty()) pet.setWeight(Float.parseFloat(weight));
-
-        System.out.print("Enter new address street (" + pet.getAdress().getStreet() + "): ");
-        String street = scanner.nextLine().trim();
-        if (!street.isEmpty()) pet.getAdress().setStreet(street);
-
-        System.out.print("Enter new address house number (" + pet.getAdress().getHouseNumber() + "): ");
-        String houseNumber = scanner.nextLine().trim();
-        if (!houseNumber.isEmpty()) pet.getAdress().setHouseNumber(houseNumber);
-
-        System.out.print("Enter new address city (" + pet.getAdress().getCity() + "): ");
-        String city = scanner.nextLine().trim();
-        if (!city.isEmpty()) pet.getAdress().setCity(city);
-
-        System.out.println("Pet details updated successfully.");
+        pet.getAdress().setStreet(getUpdatedValue("Enter new address street", pet.getAdress().getStreet()));
+        pet.getAdress().setHouseNumber(getUpdatedValue("Enter new address house number", pet.getAdress().getHouseNumber()));
+        pet.getAdress().setCity(getUpdatedValue("Enter new address city", pet.getAdress().getCity()));
     }
-
 
     private static void displaySearchResults(List<PetModel> pets) {
         if (pets.isEmpty()) {
@@ -214,13 +196,31 @@ public class CLIInterface {
 
     private static PetModel selectPetFromResults(List<PetModel> pets) {
         while (true) {
-            System.out.print("\nEnter the number of the pet you want to update (or 0 to cancel): ");
-            String selection = scanner.nextLine();
+            String selection = getUserInput("\nEnter the number of the pet you want to update (or 0 to cancel): ");
             if (selection.equals("0")) return null;
             if (!StarterMenuValidator.validateMenu(selection)) continue;
 
             int index = Integer.parseInt(selection) - 1;
             if (index >= 0 && index < pets.size()) return pets.get(index);
         }
+    }
+
+    private static String getUserInput(String prompt) {
+        System.out.print(prompt + " ");
+        return scanner.nextLine().trim();
+    }
+
+    private static <T extends Enum<T>> T getEnumValue(Class<T> enumClass, String prompt) {
+        System.out.println(prompt);
+        T[] values = enumClass.getEnumConstants();
+        for (int i = 0; i < values.length; i++) {
+            System.out.println((i + 1) + ". " + values[i]);
+        }
+        return values[Integer.parseInt(getUserInput("Enter choice: ")) - 1];
+    }
+
+    private static String getUpdatedValue(String prompt, String currentValue) {
+        String input = getUserInput(prompt + " (" + currentValue + "): ");
+        return input.isEmpty() ? currentValue : input;
     }
 }

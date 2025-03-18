@@ -1,0 +1,8 @@
+Nome: JOSAO
+Sobrenome: CARVALHO
+Raça: PODOU
+Tipo: DOG
+Sexo: MALE
+Idade: 3
+Peso: 22.0
+Endereço:  JOAO FABICIO, 129, XUCU
