@@ -2,6 +2,7 @@ package service;
 
 import model.PetModel;
 import repository.PetRepository;
+import repository.interfaces.IPetRepository;
 import service.interfaces.IPetService;
 import util.*;
 import util.exceptions.*;
@@ -11,10 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 public class PetService implements IPetService {
-    private final PetRepository repository;
+    private final IPetRepository repository;
 
-    public PetService() {
-        this.repository = new PetRepository();
+    public PetService(IPetRepository repository) {
+        this.repository = new PetRepository(getFileManage());
     }
 
     public void createPet(String name, String lastName, PetType type, PetSex sex, String ageInput, String weightInput, Adress adress, String breed) {
@@ -135,7 +136,7 @@ public class PetService implements IPetService {
     }
 
     public boolean deletePetByNameAndLastName(String name, String lastName) {
-        PetRepository petRepository = new PetRepository();
+        PetRepository petRepository = new PetRepository(getFileManage());
 
         PetModel petToFind = new PetModel(name, lastName, null, null, 0, 0, null, null);
 

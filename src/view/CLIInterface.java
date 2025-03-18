@@ -3,8 +3,10 @@ package view;
 import java.util.List;
 import java.util.Scanner;
 
+import di.DependencyContainer;
 import model.PetModel;
 import service.PetService;
+import service.interfaces.IPetService;
 import util.Adress;
 import util.PetSex;
 import util.PetType;
@@ -12,7 +14,7 @@ import util.StarterMenuValidator;
 
 public class CLIInterface {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final PetService petService = new PetService();
+    private static final IPetService petService = DependencyContainer.getPetService();
 
     public static void showStarterMenu() {
         while (true) {

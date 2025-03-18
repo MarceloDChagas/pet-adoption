@@ -3,15 +3,17 @@ package repository;
 import model.PetModel;
 import repository.interfaces.IPetRepository;
 import util.FileManage;
+import util.interfaces.IFileManage;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class PetRepository implements IPetRepository {
-    private final FileManage fileManage;
+    private final IFileManage fileManage;
     private final String petsFilePath = System.getProperty("user.dir") + "\\src\\petsCadastrados\\";
 
-    public PetRepository() {
+    public PetRepository(FileManage fileManage) {
         this.fileManage = new FileManage();
     }
 
@@ -34,14 +36,12 @@ public class PetRepository implements IPetRepository {
     private String getFormattedFileName(PetModel pet) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmm");
         String dateTime = sdf.format(new Date());
-        String fileName = dateTime + "-" + pet.getName().toUpperCase() + pet.getLastName().toUpperCase() + ".TXT";
 
-        return fileName;
+        return dateTime + "-" + pet.getName().toUpperCase() + pet.getLastName().toUpperCase() + ".TXT";
     }
 
     public Map<String, List<String>> getAllPets() {
-        Map<String, List<String>> filesData = fileManage.loadFilesToMap(petsFilePath);
-        return filesData;
+        return fileManage.loadFilesToMap(petsFilePath);
     }
 
     public Map<String, List<String>> getPetByFilter(String filter) {

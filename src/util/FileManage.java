@@ -1,9 +1,10 @@
 package util;
 
+import util.interfaces.IFileManage;
 import java.io.*;
 import java.util.*;
 
-public class FileManage {
+public class FileManage implements IFileManage {
 
     private void ensureDirectoryExists(String filePath) {
         File file = new File(filePath);
@@ -106,6 +107,5 @@ public class FileManage {
 
         return fileNames;
     }
-
 
 }
