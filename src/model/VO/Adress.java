@@ -1,4 +1,5 @@
-package util;
+package model.VO;
+
 import util.Constants;
 
 public class Adress {
@@ -7,11 +8,16 @@ public class Adress {
     private String street;
 
     public Adress(String houseNumber, String city, String street) {
-        this.houseNumber = (houseNumber == null || houseNumber.trim().isEmpty())
-                ? Constants.DEFAULT_UNINFORMED
-                : houseNumber;
+        this.houseNumber = validateHouseNumber(houseNumber);
         this.city = city;
         this.street = street;
+    }
+
+    private String validateHouseNumber(String houseNumber) {
+        if(houseNumber == null || houseNumber.isEmpty()) {
+            houseNumber = Constants.DEFAULT_UNINFORMED;
+        }
+        return houseNumber;
     }
 
     public String getHouseNumber() {
@@ -19,7 +25,7 @@ public class Adress {
     }
 
     public void setHouseNumber(String houseNumber) {
-        this.houseNumber = houseNumber;
+        this.houseNumber = validateHouseNumber(houseNumber);
     }
 
     public String getCity() {
@@ -40,8 +46,6 @@ public class Adress {
 
     @Override
     public String toString() {
-        return " " + street  +
-                ", " + houseNumber +
-                ", " + city ;
+        return street + ", " + houseNumber + ", " + city;
     }
 }

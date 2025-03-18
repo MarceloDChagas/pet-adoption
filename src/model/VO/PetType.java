@@ -1,4 +1,4 @@
-package util;
+package model.VO;
 
 public enum PetType {
     DOG,

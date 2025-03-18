@@ -1,49 +1,42 @@
 package model;
 
-import util.Adress;
-import util.Constants;
-import util.PetSex;
-import util.PetType;
+import model.VO.*;
 
-public class PetModel{
-    private String name;
-    private String lastName;
+public class PetModel {
+    private Name name;
+    private LastName lastName;
     private PetType type;
     private PetSex sex;
-    private int age;
-    private float weight;
+    private Age age;
+    private Weight weight;
     private Adress adress;
-    private String breed;
+    private Breed breed;
     private String sourceFilename;
 
-    public PetModel(String name, String lastName, PetType type, PetSex sex, int age, float weight, Adress adress, String breed) {
-        this.name = (name == null || name.trim().isEmpty()) ? Constants.DEFAULT_UNINFORMED : name.trim();
-        this.lastName = (lastName == null || lastName.trim().isEmpty()) ? Constants.DEFAULT_UNINFORMED : lastName.trim();
+    public PetModel(Name name, LastName lastName, PetType type, PetSex sex, Age age, Weight weight, Adress adress, Breed breed) {
+        this.name = name;
+        this.lastName = lastName;
         this.type = type;
         this.sex = sex;
-        this.breed = (breed == null || breed.trim().isEmpty()) ? Constants.DEFAULT_UNINFORMED : breed.trim();
-        this.age = (age < 0) ? Constants.DEFAULT_UNINFORMED_INT : age;
-        this.weight = (weight < 0) ? Constants.DEFAULT_UNINFORMED_INT : weight;
-        if (adress == null) {
-            this.adress = new Adress(Constants.DEFAULT_UNINFORMED, Constants.DEFAULT_UNINFORMED, Constants.DEFAULT_UNINFORMED);
-        } else {
-            this.adress = adress;
-        }
+        this.breed = breed;
+        this.age = age;
+        this.weight = weight;
+        this.adress = adress;
     }
 
     public String getName() {
-        return name;
+        return this.name.getName();
     }
 
-    public void setName(String name) {
+    public void setName(Name name) {
         this.name = name;
     }
 
     public String getLastName() {
-        return lastName;
+        return this.name.getName();
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(LastName lastName) {
         this.lastName = lastName;
     }
 
@@ -63,19 +56,19 @@ public class PetModel{
         this.sex = sex;
     }
 
-    public int getAge() {
-        return age;
+    public Double getAge() {
+        return this.age.getAge();
     }
 
-    public void setAge(int age) {
+    public void setAge(Age age) {
         this.age = age;
     }
 
-    public float getWeight() {
-        return weight;
+    public Double getWeight() {
+        return this.weight.getWeight();
     }
 
-    public void setWeight(float weight) {
+    public void setWeight(Weight weight) {
         this.weight = weight;
     }
 
@@ -88,10 +81,10 @@ public class PetModel{
     }
 
     public String getBreed() {
-        return breed;
+        return this.breed.getBreed();
     }
 
-    public void setBreed(String breed) {
+    public void setBreed(Breed breed) {
         this.breed = breed;
     }
 
@@ -105,12 +98,12 @@ public class PetModel{
 
     @Override
     public String toString() {
-        return  name  + " - "
+        return  name.getName() + " " + lastName.getLastName() + " - "
                 + type + " - "
                 + sex + " - "
                 + adress.toString() + " - "
-                + age + " anos - "
-                + weight + " - "
+                + age.getAge() + " anos - "
+                + weight.getWeight() + " kg - "
                 + breed;
     }
 }

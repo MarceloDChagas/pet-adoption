@@ -3,13 +3,10 @@ package view;
 import java.util.List;
 import java.util.Scanner;
 
-import di.DependencyContainer;
+import DI.DependencyContainer;
 import model.PetModel;
-import service.PetService;
+import model.VO.*;
 import service.interfaces.IPetService;
-import util.Adress;
-import util.PetSex;
-import util.PetType;
 import util.StarterMenuValidator;
 
 public class CLIInterface {
@@ -306,28 +303,58 @@ public class CLIInterface {
     private static void updatePetDetails(PetModel pet) {
         System.out.println("\n=== Update Pet Details ===");
 
-        pet.setName(getUpdatedValue("Enter new name", pet.getName()));
-        pet.setLastName(getUpdatedValue("Enter new last name", pet.getLastName()));
-        pet.setBreed(getUpdatedValue("Enter new breed", pet.getBreed()));
+        // Atualizando o nome e sobrenome
+        String newName = getUpdatedValue("Enter new name", pet.getName());
+        if (!newName.isEmpty()) {
+            pet.setName(new Name(newName)); // Atualiza o nome
+        }
 
+        String newLastName = getUpdatedValue("Enter new last name", pet.getLastName());
+        if (!newLastName.isEmpty()) {
+            pet.setLastName(new LastName(newLastName)); // Atualiza o sobrenome
+        }
+
+        // Atualizando a raça
+        String newBreed = getUpdatedValue("Enter new breed", pet.getBreed());
+        if (!newBreed.isEmpty()) {
+            pet.setBreed(new Breed(newBreed)); // Atualiza a raça
+        }
+
+        // Atualizando a idade
         String ageInput = getUpdatedValue("Enter new age", String.valueOf(pet.getAge()));
         if (!ageInput.isEmpty()) {
             try {
-                pet.setAge(Integer.parseInt(ageInput));
+                int newAge = Integer.parseInt(ageInput);
+                pet.setAge(new Age(newAge)); // Atualiza a idade
             } catch (NumberFormatException ignored) {}
         }
 
+        // Atualizando o peso
         String weightInput = getUpdatedValue("Enter new weight", String.valueOf(pet.getWeight()));
         if (!weightInput.isEmpty()) {
             try {
-                pet.setWeight(Float.parseFloat(weightInput));
+                float newWeight = Float.parseFloat(weightInput);
+                pet.setWeight(new Weight(newWeight)); // Atualiza o peso
             } catch (NumberFormatException ignored) {}
         }
 
-        pet.getAdress().setStreet(getUpdatedValue("Enter new address street", pet.getAdress().getStreet()));
-        pet.getAdress().setHouseNumber(getUpdatedValue("Enter new address house number", pet.getAdress().getHouseNumber()));
-        pet.getAdress().setCity(getUpdatedValue("Enter new address city", pet.getAdress().getCity()));
+        // Atualizando o endereço
+        String newStreet = getUpdatedValue("Enter new address street", pet.getAdress().getStreet());
+        if (!newStreet.isEmpty()) {
+            pet.getAdress().setStreet(newStreet); // Atualiza a rua
+        }
+
+        String newHouseNumber = getUpdatedValue("Enter new address house number", pet.getAdress().getHouseNumber());
+        if (!newHouseNumber.isEmpty()) {
+            pet.getAdress().setHouseNumber(newHouseNumber); // Atualiza o número da casa
+        }
+
+        String newCity = getUpdatedValue("Enter new address city", pet.getAdress().getCity());
+        if (!newCity.isEmpty()) {
+            pet.getAdress().setCity(newCity); // Atualiza a cidade
+        }
     }
+
 
     private static void displaySearchResults(List<PetModel> pets) {
         if (pets.isEmpty()) {

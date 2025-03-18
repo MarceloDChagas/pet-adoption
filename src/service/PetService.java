@@ -1,11 +1,12 @@
 package service;
 
 import model.PetModel;
+import model.VO.*;
 import repository.PetRepository;
 import repository.interfaces.IPetRepository;
 import service.interfaces.IPetService;
-import util.*;
-import util.exceptions.*;
+import util.Constants;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -19,10 +20,18 @@ public class PetService implements IPetService {
     }
 
     public void createPet(String name, String lastName, PetType type, PetSex sex, String ageInput, String weightInput, Adress adress, String breed) {
-        int age = validateAge(ageInput);
-        float weight = validateWeight(weightInput);
-        validateBreed(breed);
-        repository.savePetToFile(new PetModel(name, lastName, type, sex, age, weight, adress, breed));
+        // Convertendo os parâmetros para as classes VO correspondentes
+        Name petName = new Name(name);
+        LastName petLastName = new LastName(lastName);
+        Age petAge = new Age(Integer.parseInt(ageInput));
+        Weight petWeight = new Weight(Float.parseFloat(weightInput));
+        Breed petBreed = new Breed(breed);
+
+        // Criando o PetModel com os objetos VO
+        PetModel petModel = new PetModel(petName, petLastName, type, sex, petAge, petWeight, adress, petBreed);
+
+        // Salvando o pet no repositório
+        repository.savePetToFile(petModel);
     }
 
     public void updatePet(PetModel updatedPet) {
@@ -60,7 +69,7 @@ public class PetService implements IPetService {
             String[] parts = fileName.split("-");
             if (parts.length > 1) {
                 String extractedName = parts[1].replace(".TXT", "").trim();
-                String fullPetName = selectedPet.getName() + selectedPet.getLastName();
+                String fullPetName = selectedPet.getName().toString() + selectedPet.getLastName().toString();
 
                 if (extractedName.equalsIgnoreCase(fullPetName)) {
                     return fileName;
@@ -71,11 +80,11 @@ public class PetService implements IPetService {
     }
 
     public void updatePetDetails(PetModel pet, String name, String lastName, String breed, Integer age, Float weight, Adress adress) {
-        if (name != null && !name.isEmpty()) pet.setName(name);
-        if (lastName != null && !lastName.isEmpty()) pet.setLastName(lastName);
-        if (breed != null && !breed.isEmpty()) pet.setBreed(breed);
-        if (age != null) pet.setAge(age);
-        if (weight != null) pet.setWeight(weight);
+        if (name != null && !name.isEmpty()) pet.setName(new Name(name));
+        if (lastName != null && !lastName.isEmpty()) pet.setLastName(new LastName(lastName));
+        if (breed != null && !breed.isEmpty()) pet.setBreed(new Breed(breed));
+        if (age != null) pet.setAge(new Age(age));
+        if (weight != null) pet.setWeight(new Weight(weight));
         if (adress != null) pet.setAdress(adress);
     }
 
@@ -127,7 +136,8 @@ public class PetService implements IPetService {
             String houseNumber = addressParts.length > 1 ? addressParts[1].trim() : Constants.DEFAULT_UNINFORMED;
             String city = addressParts.length > 2 ? addressParts[2].trim() : Constants.DEFAULT_UNINFORMED;
 
-            return new PetModel(name, lastName, type, sex, age, weight, new Adress(houseNumber, city, street), breed);
+            // Usando os objetos VO para construir o PetModel
+            return new PetModel(new Name(name), new LastName(lastName), type, sex, new Age(age), new Weight(weight), new Adress(houseNumber, city, street), new Breed(breed));
         } catch (Exception e) {
             System.out.println("Erro ao converter linhas para PetModel: " + lines);
             e.printStackTrace();
@@ -136,7 +146,7 @@ public class PetService implements IPetService {
     }
 
     public boolean deletePetByNameAndLastName(String name, String lastName) {
-        PetModel petToFind = new PetModel(name, lastName, null, null, 0, 0, null, null);
+        PetModel petToFind = new PetModel(new Name(name), new LastName(lastName), null, null, new Age(0), new Weight(0), null, null);
         String petFile = findPetFile(petToFind, (PetRepository)repository); // Cast if necessary
         if (petFile != null) {
             repository.deletePetFile(petFile);
@@ -154,30 +164,4 @@ public class PetService implements IPetService {
         return Constants.DEFAULT_UNINFORMED;
     }
 
-    public int validateAge(String ageInput) {
-        try {
-            int age = Integer.parseInt(ageInput.trim());
-            PetValidator.validateAge(age);
-            return age;
-        } catch (NumberFormatException | InvalidAgeException e) {
-            return Constants.DEFAULT_UNINFORMED_INT;
-        }
-    }
-
-    public float validateWeight(String weightInput) {
-        try {
-            float weight = Float.parseFloat(weightInput.trim());
-            PetValidator.isValidWeight(weight);
-            return weight;
-        } catch (NumberFormatException | InvalidWeightException e) {
-            return Constants.DEFAULT_UNINFORMED_INT;
-        }
-    }
-
-    public void validateBreed(String breed) {
-        if (breed == null || breed.trim().isEmpty()) {
-            breed = Constants.DEFAULT_UNINFORMED;
-        }
-        PetValidator.isValidBreed(breed);
-    }
 }

@@ -2,10 +2,10 @@ package service.interfaces;
 
 import model.PetModel;
 import repository.PetRepository;
-import util.Adress;
-import util.PetSex;
-import util.PetType;
-
+import model.VO.Adress;
+import model.VO.Name;
+import model.VO.PetSex;
+import model.VO.PetType;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +24,4 @@ public interface IPetService {
     PetModel parseLineToPet(List<String> lines);
     boolean deletePetByNameAndLastName(String name, String lastName);
     String extractValue(List<String> lines, String prefix);
-    int validateAge(String ageInput);
-    float validateWeight(String weightInput);
-    void validateBreed(String breed);
 }

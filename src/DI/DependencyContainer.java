@@ -1,5 +1,5 @@
-// src/di/DependencyContainer.java
-package di;
+// src/DI/DependencyContainer.java
+package DI;
 
 import repository.interfaces.IPetRepository;
 import repository.PetRepository;
