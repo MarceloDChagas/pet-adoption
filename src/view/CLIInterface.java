@@ -72,133 +72,185 @@ public class CLIInterface {
         printAllPets(petService.findAllPets());
     }
 
-    private static void printAllPets(List <PetModel> pets){
-        for (PetModel pet : pets){
-            System.out.println(pet);
+    private static void printAllPets(List<PetModel> pets) {
+        if (pets == null || pets.isEmpty()) {
+            System.out.println("No pets found.");
+            return;
+        }
+
+        System.out.println("\n=== Pet List ===");
+        for (int i = 0; i < pets.size(); i++) {
+            System.out.println((i + 1) + ". " + pets.get(i));
         }
     }
 
     private static void deletePet() {
-        String name = getUserInput("Enter the name of the pet to delete: ");
-        String lastName = getUserInput("Enter the last name of the pet: ");
+        List<PetModel> pets = petService.findAllPets();
+        if (pets.isEmpty()) {
+            System.out.println("No pets available for deletion.");
+            return;
+        }
+        printAllPets(pets);
+        System.out.print("\nEnter the number of the pet you want to delete (or 0 to cancel): ");
+        String input = scanner.nextLine();
 
-        boolean deleted = petService.deletePetByNameAndLastName(name, lastName);
+        if (!StarterMenuValidator.validateMenu(input)) {
+            System.out.println("Invalid input! Please enter a valid number.");
+            return;
+        }
 
-        if (deleted) {
-            System.out.println("Pet deleted successfully.");
+        int index = Integer.parseInt(input) - 1;
+        if (index < 0 || index >= pets.size()) {
+            System.out.println("Invalid choice! Returning to search.");
+            return;
+        }
+
+        PetModel petToDelete = pets.get(index);
+
+        System.out.print("Are you sure you want to delete " + petToDelete.getName() + "? (YES/NO): ");
+        String confirmation = scanner.nextLine().trim().toUpperCase();
+
+        if (confirmation.equals("YES")) {
+            boolean deleted = petService.deletePetByNameAndLastName(petToDelete.getName(), petToDelete.getLastName());
+
+            if (deleted) {
+                System.out.println("Pet deleted successfully.");
+            } else {
+                System.out.println("Error: Pet not found or could not be deleted.");
+            }
         } else {
-            System.out.println("Pet not found.");
+            System.out.println("Deletion canceled.");
         }
     }
-    private static void deletePet(PetModel petToUpdate) {
-        String name = petToUpdate.getName();
-        String lastName = petToUpdate.getLastName();
 
-        boolean deleted = petService.deletePetByNameAndLastName(name, lastName);
+    private static boolean deletePetForUpdate(PetModel petToDelete) {
+        if (petToDelete == null) {
+            System.out.println("Invalid pet selection.");
+            return false;
+        }
+
+        boolean deleted = petService.deletePetByNameAndLastName(petToDelete.getName(), petToDelete.getLastName());
 
         if (deleted) {
             System.out.println("Pet deleted successfully.");
+            return true;
         } else {
-            System.out.println("Pet not found.");
+            System.out.println("Error: Pet not found or could not be deleted.");
+            return false;
         }
     }
 
     private static void filterPets() {
-        System.out.println("\n=== Filter Pets ===");
-        System.out.println("1. Search by one filter");
-        System.out.println("2. Search by two filters");
-        System.out.println("3. Return to main menu");
-        System.out.print("Enter your choice: ");
+        List<PetModel> filteredPets = null;
 
-        String choice = scanner.nextLine();
+        while (true) {
+            System.out.println("\n=== Filter Pets ===");
+            System.out.println("1. Search by one filter");
+            System.out.println("2. Search by two filters");
+            System.out.println("3. Return to main menu");
+            System.out.print("Enter your choice: ");
 
-        if (!StarterMenuValidator.validateMenu(choice)) {
-            System.out.println("Invalid input! Please enter a valid number (1-3).");
-            return;
-        }
+            String choice = scanner.nextLine();
 
-        switch (Integer.parseInt(choice)) {
-            case 1 -> {
-                System.out.println("\nChoose a filter:");
-                System.out.println("1. Name");
-                System.out.println("2. Breed");
-                System.out.print("Enter your choice: ");
-
-                String filterChoice = scanner.nextLine();
-                if (!StarterMenuValidator.validateMenu(filterChoice)) {
-                    System.out.println("Invalid input!");
-                    return;
-                }
-
-                switch (Integer.parseInt(filterChoice)) {
-                    case 1 -> {
-                        System.out.print("Enter pet name: ");
-                        String name = scanner.nextLine().trim();
-                        printAllPets(petService.findPet(name));
-                    }
-                    case 2 -> {
-                        System.out.print("Enter pet breed: ");
-                        String breed = scanner.nextLine().trim();
-                        petService.findPet(breed);
-                        printAllPets(petService.findPet(breed));
-                    }
-                    default -> System.out.println("Invalid choice.");
-                }
+            if (!StarterMenuValidator.validateMenu(choice)) {
+                System.out.println("Invalid input! Please enter a valid number (1-3).");
+                continue;
             }
-            case 2 -> {
-                System.out.println("\nChoose two filters:");
-                System.out.println("1. Name and Breed");
-                System.out.println("2. Name and Type");
-                System.out.println("3. Breed and Type");
-                System.out.print("Enter your choice: ");
 
-                String filterChoice = scanner.nextLine();
-                if (!StarterMenuValidator.validateMenu(filterChoice)) {
-                    System.out.println("Invalid input!");
-                    return;
-                }
-
-                switch (Integer.parseInt(filterChoice)) {
-                    case 1 -> {
-                        System.out.print("Enter pet name: ");
-                        String name = scanner.nextLine().trim();
-                        System.out.print("Enter pet breed: ");
-                        String breed = scanner.nextLine().trim();
-                        printAllPets(petService.findPet(name, breed));
-                    }
-                    case 2 -> {
-                        System.out.print("Enter pet name: ");
-                        String name = scanner.nextLine().trim();
-                        System.out.println("Select pet type:");
-                        for (PetType type : PetType.values()) {
-                            System.out.println(type.ordinal() + 1 + ". " + type);
-                        }
-                        System.out.print("Enter pet type (number): ");
-                        PetType type = PetType.values()[Integer.parseInt(scanner.nextLine().trim()) - 1];
-                        petService.findPet(name, type.toString());
-                        printAllPets(petService.findPet(name, type.toString()));
-
-                    }
-                    case 3 -> {
-                        System.out.print("Enter pet breed: ");
-                        String breed = scanner.nextLine().trim();
-                        System.out.println("Select pet type:");
-                        for (PetType type : PetType.values()) {
-                            System.out.println(type.ordinal() + 1 + ". " + type);
-                        }
-                        System.out.print("Enter pet type (number): ");
-                        PetType type = PetType.values()[Integer.parseInt(scanner.nextLine().trim()) - 1];
-                        petService.findPet(breed, type.toString());
-                        printAllPets(petService.findPet(breed, type.toString()));
-                    }
-                    default -> System.out.println("Invalid choice.");
-                }
+            int option = Integer.parseInt(choice);
+            if (option == 3) {
+                System.out.println("Returning to main menu...");
+                return;
             }
-            case 3 -> System.out.println("Returning to main menu...");
-            default -> System.out.println("Invalid choice.");
+
+            switch (option) {
+                case 1 -> filteredPets = searchByOneFilter();
+                case 2 -> filteredPets = searchByTwoFilters();
+                default -> System.out.println("Invalid choice.");
+            }
+
+            if (filteredPets != null && !filteredPets.isEmpty()) {
+                printAllPets(filteredPets);
+            } else {
+                System.out.println("No pets found matching the criteria. Try again.");
+            }
         }
     }
 
+    private static List<PetModel> searchByOneFilter() {
+        System.out.println("\nChoose a filter:");
+        System.out.println("1. Name");
+        System.out.println("2. Breed");
+        System.out.print("Enter your choice: ");
+
+        String filterChoice = scanner.nextLine();
+        if (!StarterMenuValidator.validateMenu(filterChoice)) {
+            System.out.println("Invalid input! Please try again.");
+            return null;
+        }
+
+        switch (Integer.parseInt(filterChoice)) {
+            case 1 -> {
+                System.out.print("Enter pet name: ");
+                String name = scanner.nextLine().trim();
+                return petService.findPet(name);
+            }
+            case 2 -> {
+                System.out.print("Enter pet breed: ");
+                String breed = scanner.nextLine().trim();
+                return petService.findPet(breed);
+            }
+            default -> System.out.println("Invalid choice.");
+        }
+        return null;
+    }
+
+    private static List<PetModel> searchByTwoFilters() {
+        System.out.println("\nChoose two filters:");
+        System.out.println("1. Name and Breed");
+        System.out.println("2. Name and Type");
+        System.out.println("3. Breed and Type");
+        System.out.print("Enter your choice: ");
+
+        String filterChoice = scanner.nextLine();
+        if (!StarterMenuValidator.validateMenu(filterChoice)) {
+            System.out.println("Invalid input! Please try again.");
+            return null;
+        }
+
+        switch (Integer.parseInt(filterChoice)) {
+            case 1 -> {
+                System.out.print("Enter pet name: ");
+                String name = scanner.nextLine().trim();
+                System.out.print("Enter pet breed: ");
+                String breed = scanner.nextLine().trim();
+                return petService.findPet(name, breed);
+            }
+            case 2 -> {
+                System.out.print("Enter pet name: ");
+                String name = scanner.nextLine().trim();
+                PetType type = selectPetType();
+                return petService.findPet(name, type.toString());
+            }
+            case 3 -> {
+                System.out.print("Enter pet breed: ");
+                String breed = scanner.nextLine().trim();
+                PetType type = selectPetType();
+                return petService.findPet(breed, type.toString());
+            }
+            default -> System.out.println("Invalid choice.");
+        }
+        return null;
+    }
+
+    private static PetType selectPetType() {
+        System.out.println("Select pet type:");
+        for (PetType type : PetType.values()) {
+            System.out.println(type.ordinal() + 1 + ". " + type);
+        }
+        System.out.print("Enter pet type (number): ");
+        return PetType.values()[Integer.parseInt(scanner.nextLine().trim()) - 1];
+    }
 
     private static void searchAndUpdatePet() {
         List<PetModel> searchResults = getSearchResults();
@@ -215,9 +267,9 @@ public class CLIInterface {
             System.out.println("No pet selected.");
             return;
         }
-        deletePet(selectedPet);
         updatePetDetails(selectedPet);
         petService.updatePet(selectedPet);
+        deletePetForUpdate(selectedPet);
         System.out.println("Pet details updated successfully.");
     }
 

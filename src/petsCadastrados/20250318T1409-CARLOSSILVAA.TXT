@@ -1,8 +1,0 @@
-Nome: carlos
-Sobrenome: silvaa
-Raça: marrom
-Tipo: CAT
-Sexo: FEMALE
-Idade: 2
-Peso: 33.0
-Endereço:  joao, 123, belo jardim
