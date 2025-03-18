@@ -9,7 +9,7 @@ import java.util.*;
 
 public class PetRepository implements IPetRepository {
     private final FileManage fileManage;
-    private final String petsFilePath = "C:\\Users\\Telo\\IdeaProjects\\pet-adoption\\src\\petsCadastrados\\"; // Caminho para o arquivo de objetos binários
+    private final String petsFilePath = System.getProperty("user.dir") + "\\src\\petsCadastrados\\";
 
     public PetRepository() {
         this.fileManage = new FileManage();
