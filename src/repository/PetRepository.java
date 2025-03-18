@@ -86,6 +86,14 @@ public class PetRepository {
         return filesDataFiltered;
     }
 
+    private void listPet(Map<String, List<String>> filesData) {
+        for (Map.Entry<String, List<String>> entry : filesData.entrySet()) {
+            for (String line : entry.getValue()) {
+                System.out.println(line);
+            }
+        }
+    }
+
     public Map<String, List<String>> getPetByDateWithFilter(String date, String filter) {
         Map<String, List<String>> filesData = fileManage.loadFilesToMap(petsFilePath);
         Map<String, List<String>> filesDataFiltered = new HashMap<>();
@@ -100,6 +108,7 @@ public class PetRepository {
                 }
             }
         }
+        listPet(filesDataFiltered);
         return filesDataFiltered;
     }
 
@@ -117,6 +126,7 @@ public class PetRepository {
                 }
             }
         }
+        listPet(filesDataFiltered);
         return filesDataFiltered;
     }
 
