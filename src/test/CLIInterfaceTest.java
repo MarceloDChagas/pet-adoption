@@ -1,22 +1,22 @@
 package test;
 
+import di.DependencyContainer;
 import model.PetModel;
 import org.junit.jupiter.api.*;
-import service.PetService;
+import service.interfaces.IPetService;
 import util.Adress;
 import util.PetSex;
 import util.PetType;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
+
 public class CLIInterfaceTest {
-    private static PetService petService;
+    private static IPetService petService;
     private static PetModel testPet;
 
     @BeforeAll
     static void setup() {
-        petService = new PetService(); // Inicializa o serviço antes de todos os testes
+        petService = DependencyContainer.getPetService();
     }
 
     @BeforeEach

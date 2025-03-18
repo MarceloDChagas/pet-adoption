@@ -15,7 +15,7 @@ public class PetService implements IPetService {
     private final IPetRepository repository;
 
     public PetService(IPetRepository repository) {
-        this.repository = new PetRepository(getFileManage());
+        this.repository = repository;
     }
 
     public void createPet(String name, String lastName, PetType type, PetSex sex, String ageInput, String weightInput, Adress adress, String breed) {
@@ -136,17 +136,12 @@ public class PetService implements IPetService {
     }
 
     public boolean deletePetByNameAndLastName(String name, String lastName) {
-        PetRepository petRepository = new PetRepository(getFileManage());
-
         PetModel petToFind = new PetModel(name, lastName, null, null, 0, 0, null, null);
-
-        String petFile = findPetFile(petToFind, petRepository);
-
+        String petFile = findPetFile(petToFind, (PetRepository)repository); // Cast if necessary
         if (petFile != null) {
-            petRepository.deletePetFile(petFile);
+            repository.deletePetFile(petFile);
             return true;
         }
-
         return false;
     }
 

@@ -13,8 +13,8 @@ public class PetRepository implements IPetRepository {
     private final IFileManage fileManage;
     private final String petsFilePath = System.getProperty("user.dir") + "\\src\\petsCadastrados\\";
 
-    public PetRepository(FileManage fileManage) {
-        this.fileManage = new FileManage();
+    public PetRepository(IFileManage fileManage) {
+        this.fileManage = fileManage;
     }
 
     public void savePetToFile(PetModel pet) {
