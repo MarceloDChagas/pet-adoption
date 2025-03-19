@@ -23,8 +23,8 @@ public class PetService implements IPetService {
         // Convertendo os parâmetros para as classes VO correspondentes
         Name petName = new Name(name);
         LastName petLastName = new LastName(lastName);
-        Age petAge = new Age(Integer.parseInt(ageInput));
-        Weight petWeight = new Weight(Float.parseFloat(weightInput));
+        Age petAge = new Age(Double.parseDouble(ageInput));
+        Weight petWeight = new Weight(Double.parseDouble(weightInput));
         Breed petBreed = new Breed(breed);
 
         // Criando o PetModel com os objetos VO
@@ -79,7 +79,7 @@ public class PetService implements IPetService {
         return null;
     }
 
-    public void updatePetDetails(PetModel pet, String name, String lastName, String breed, Integer age, Float weight, Adress adress) {
+    public void updatePetDetails(PetModel pet, String name, String lastName, String breed, Double age, Double weight, Adress adress) {
         if (name != null && !name.isEmpty()) pet.setName(new Name(name));
         if (lastName != null && !lastName.isEmpty()) pet.setLastName(new LastName(lastName));
         if (breed != null && !breed.isEmpty()) pet.setBreed(new Breed(breed));
@@ -127,8 +127,8 @@ public class PetService implements IPetService {
             String breed = extractValue(lines, "Raça:");
             PetType type = PetType.valueOf(extractValue(lines, "Tipo:").toUpperCase());
             PetSex sex = PetSex.valueOf(extractValue(lines, "Sexo:").toUpperCase());
-            int age = Integer.parseInt(extractValue(lines, "Idade:"));
-            float weight = Float.parseFloat(extractValue(lines, "Peso:"));
+            Double age = Double.parseDouble(extractValue(lines, "Idade:"));
+            Double weight = Double.parseDouble(extractValue(lines, "Peso:"));
 
             String addressLine = extractValue(lines, "Endereço:");
             String[] addressParts = addressLine.split(",");
@@ -146,7 +146,7 @@ public class PetService implements IPetService {
     }
 
     public boolean deletePetByNameAndLastName(String name, String lastName) {
-        PetModel petToFind = new PetModel(new Name(name), new LastName(lastName), null, null, new Age(0), new Weight(0), null, null);
+        PetModel petToFind = new PetModel(new Name(name), new LastName(lastName), null, null, new Age(10.0), new Weight(10.0), null, null);
         String petFile = findPetFile(petToFind, (PetRepository)repository); // Cast if necessary
         if (petFile != null) {
             repository.deletePetFile(petFile);

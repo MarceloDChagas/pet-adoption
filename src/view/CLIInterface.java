@@ -317,24 +317,23 @@ public class CLIInterface {
         // Atualizando a raça
         String newBreed = getUpdatedValue("Enter new breed", pet.getBreed());
         if (!newBreed.isEmpty()) {
-            pet.setBreed(new Breed(newBreed)); // Atualiza a raça
+            pet.setBreed(new Breed(newBreed));
         }
 
-        // Atualizando a idade
         String ageInput = getUpdatedValue("Enter new age", String.valueOf(pet.getAge()));
         if (!ageInput.isEmpty()) {
             try {
-                int newAge = Integer.parseInt(ageInput);
-                pet.setAge(new Age(newAge)); // Atualiza a idade
+                Double newAge = Double.parseDouble(ageInput);
+                pet.setAge(new Age(newAge));
             } catch (NumberFormatException ignored) {}
         }
 
-        // Atualizando o peso
+
         String weightInput = getUpdatedValue("Enter new weight", String.valueOf(pet.getWeight()));
         if (!weightInput.isEmpty()) {
             try {
                 float newWeight = Float.parseFloat(weightInput);
-                pet.setWeight(new Weight(newWeight)); // Atualiza o peso
+                pet.setWeight(new Weight(newWeight));
             } catch (NumberFormatException ignored) {}
         }
 

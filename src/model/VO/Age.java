@@ -6,13 +6,13 @@ import util.exceptions.InvalidAgeException;
 public class Age {
     private Double age;
 
-    public Age(int age) {
+    public Age(Double age) {
         this.age = validateAge(age);
     }
 
     private double validateAge(double age) {
         if (age < 1) {
-            return age / 12.0;  // Para idades em meses
+            return age / 12.0;
         }
         if (age > 20) {
             throw new InvalidAgeException(Constants.INVALID_AGE_MESSAGE);

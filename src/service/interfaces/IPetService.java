@@ -19,7 +19,7 @@ public interface IPetService {
     List<PetModel> findPetByDateWithFilter(String date, String filter);
     List<PetModel> findPetByDateWithFilter(String date, String filter, String secondFilter);
     String findPetFile(PetModel selectedPet, PetRepository petRepository);
-    void updatePetDetails(PetModel pet, String name, String lastName, String breed, Integer age, Float weight, Adress adress);
+    void updatePetDetails(PetModel pet, String name, String lastName, String breed, Double age, Double weight, Adress adress);
     List<PetModel> parsePetData(Map<String, List<String>> filesData);
     PetModel parseLineToPet(List<String> lines);
     boolean deletePetByNameAndLastName(String name, String lastName);
