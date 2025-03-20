@@ -1,0 +1,3 @@
+service\PetServiceTest.class
+view\CLIInterfaceTest.class
+repository\Database\DatabaseConnectionTest.class
