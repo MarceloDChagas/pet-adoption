@@ -2,6 +2,7 @@ C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\model\VO\Breed.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\util\exceptions\InvalidWeightException.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\model\PetModel.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\model\VO\PetSex.java
+C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\model\IE\PetSpec.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\model\VO\Age.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\service\PetService.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\service\interfaces\IPetService.java
@@ -9,7 +10,6 @@ C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\util\FileManage.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\util\interfaces\IFileManage.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\model\VO\PetType.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\util\exceptions\InvalidNameException.java
-C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\model\VO\Adress.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\util\TextHighlighter.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\DI\DependencyContainer.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\model\VO\LastName.java
@@ -17,6 +17,7 @@ C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\util\Constants.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\model\VO\Name.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\repository\Database\DatabaseConnection.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\repository\interfaces\IPetDAO.java
+C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\model\VO\Address.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\util\exceptions\InvalidBreedException.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\view\CLIInterface.java
 C:\Users\Telo\IdeaProjects\pet-adoption\src\main\java\model\VO\Weight.java

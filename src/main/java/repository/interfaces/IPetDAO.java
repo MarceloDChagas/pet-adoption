@@ -1,5 +1,6 @@
 package repository.interfaces;
 
+import model.IE.PetSpec;
 import model.PetModel;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,7 @@ public interface IPetDAO {
 
     Map<String, List<String>> getAllPets();
 
-    Map<String, List<String>> getPetByFilter(String filter);
+    Map<String, List<String>> getPetByFilter(PetSpec petSpec);
 
     Map<String, List<String>> getPetByFilter(String filter, String secondFilter);
 
@@ -19,7 +20,7 @@ public interface IPetDAO {
 
     Map<String, List<String>> getPetByDateWithFilter(String date, String filter, String secondFilter);
 
-    boolean deletePetFile(String fileName);
+    void deletePetFile(String fileName);
 
     List<String> getAllFileNames();
 }

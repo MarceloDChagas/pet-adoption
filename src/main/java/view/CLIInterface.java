@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import DI.DependencyContainer;
+import model.IE.PetSpec;
 import model.PetModel;
 import model.VO.*;
 import service.interfaces.IPetService;
@@ -122,20 +123,18 @@ public class CLIInterface {
         }
     }
 
-    private static boolean deletePetForUpdate(PetModel petToDelete) {
+    private static void deletePetForUpdate(PetModel petToDelete) {
         if (petToDelete == null) {
             System.out.println("Invalid pet selection.");
-            return false;
+            return;
         }
 
         boolean deleted = petService.deletePetByNameAndLastName(petToDelete.getName(), petToDelete.getLastName());
 
         if (deleted) {
             System.out.println("Pet deleted successfully.");
-            return true;
         } else {
             System.out.println("Error: Pet not found or could not be deleted.");
-            return false;
         }
     }
 
@@ -163,7 +162,7 @@ public class CLIInterface {
             }
 
             switch (option) {
-                case 1 -> filteredPets = searchByOneFilter();
+                case 1 -> filteredPets = searchPet();
                 case 2 -> filteredPets = searchByTwoFilters();
                 default -> System.out.println("Invalid choice.");
             }
@@ -174,6 +173,35 @@ public class CLIInterface {
                 System.out.println("No pets found matching the criteria. Try again.");
             }
         }
+    }
+
+    private static List<PetModel> searchPet() {
+        System.out.println("\nChoose a filter:");
+        System.out.println("1. Name");
+        System.out.println("2. Breed");
+        System.out.print("Enter your choice: ");
+
+        String filterChoice = scanner.nextLine();
+        if (!StarterMenuValidator.validateMenu(filterChoice)) {
+            System.out.println("Invalid input! Please try again.");
+            return null;
+        }
+        PetSpec.Builder builder = new PetSpec.Builder();
+        switch (Integer.parseInt(filterChoice)) {
+            case 1 -> {
+                System.out.print("Enter pet name: ");
+                String name = scanner.nextLine().trim();
+                builder.setName(new Name(name));
+            }
+            case 2 -> {
+                System.out.print("Enter pet breed: ");
+                String breed = scanner.nextLine().trim();
+                builder.setBreed(new Breed(breed));
+            }
+            default -> System.out.println("Invalid choice.");
+        }
+        PetSpec petSpec = builder.build();
+        return petService.findPetBySpec(petSpec);
     }
 
     private static List<PetModel> searchByOneFilter() {
@@ -188,22 +216,27 @@ public class CLIInterface {
             return null;
         }
 
+        PetSpec.Builder builder = new PetSpec.Builder();
+
         switch (Integer.parseInt(filterChoice)) {
             case 1 -> {
                 System.out.print("Enter pet name: ");
                 String name = scanner.nextLine().trim();
-                return petService.findPet(name);
+                builder.setName(new Name(name));
             }
             case 2 -> {
                 System.out.print("Enter pet breed: ");
                 String breed = scanner.nextLine().trim();
-                return petService.findPet(breed);
+                builder.setBreed(new Breed(breed));
             }
-            default -> System.out.println("Invalid choice.");
+            default -> {
+                System.out.println("Invalid choice.");
+                return null;
+            }
         }
-        return null;
-    }
 
+        return petService.findPetBySpec(builder.build());
+    }
     private static List<PetModel> searchByTwoFilters() {
         System.out.println("\nChoose two filters:");
         System.out.println("1. Name and Breed");
@@ -217,29 +250,47 @@ public class CLIInterface {
             return null;
         }
 
+        PetSpec.Builder builder = new PetSpec.Builder();
+
         switch (Integer.parseInt(filterChoice)) {
             case 1 -> {
                 System.out.print("Enter pet name: ");
                 String name = scanner.nextLine().trim();
+                builder.setName(new Name(name));
+
                 System.out.print("Enter pet breed: ");
                 String breed = scanner.nextLine().trim();
-                return petService.findPet(name, breed);
+                builder.setBreed(new Breed(breed));
             }
             case 2 -> {
                 System.out.print("Enter pet name: ");
                 String name = scanner.nextLine().trim();
-                PetType type = selectPetType();
-                return petService.findPet(name, type.toString());
+                builder.setName(new Name(name));
+
+                // Observação: Você precisará adaptar esta parte para guardar o tipo
+                // no objeto PetSpec. O PetSpec atual não tem um campo para tipo.
+                // Uma solução seria adicionar isso ao PetSpec ou tratar o tipo como
+                // uma string no método de filtragem.
+
+                // PetType type = selectPetType();
+                // builder.setType(new Type(type)); // Você precisa adicionar isso ao PetSpec
             }
             case 3 -> {
                 System.out.print("Enter pet breed: ");
                 String breed = scanner.nextLine().trim();
-                PetType type = selectPetType();
-                return petService.findPet(breed, type.toString());
+                builder.setBreed(new Breed(breed));
+
+                // Mesmo comentário sobre o tipo do pet
+                // PetType type = selectPetType();
+                // builder.setType(new Type(type));
             }
-            default -> System.out.println("Invalid choice.");
+            default -> {
+                System.out.println("Invalid choice.");
+                return null;
+            }
         }
-        return null;
+
+        return petService.findPetBySpec(builder.build());
     }
 
     private static PetType selectPetType() {
@@ -276,27 +327,121 @@ public class CLIInterface {
         while (true) {
             System.out.println("\n=== Search Pets ===");
             System.out.println("1. Search by name");
-            System.out.println("2. Search by date");
-            System.out.println("3. Search by breed");
-            System.out.println("4. Return to main menu");
+            System.out.println("2. Search by last name");
+            System.out.println("3. Search by age");
+            System.out.println("4. Search by weight");
+            System.out.println("5. Search by breed");
+            System.out.println("6. Search by address");
+            System.out.println("7. Advanced search (multiple criteria)");
+            System.out.println("8. Return to main menu");
             System.out.print("Enter your choice: ");
 
             String choice = scanner.nextLine();
             if (!StarterMenuValidator.validateMenu(choice)) {
-                System.out.println("Invalid input! Please enter a valid number (1-4).");
+                System.out.println("Invalid input! Please enter a valid number (1-8).");
                 continue;
             }
 
-            return switch (Integer.parseInt(choice)) {
-                case 1 -> petService.findPet(getUserInput("Enter pet name to search: "));
-                case 2 -> petService.findPetByDate(getUserInput("Enter date (YYYYMMDD): "));
-                case 3 -> petService.findPet(getUserInput("Enter breed to search: "));
-                case 4 -> null;
-                default -> {
+            int choiceNum = Integer.parseInt(choice);
+            if (choiceNum == 8) {
+                return null;
+            }
+
+            // Criar o Builder para o PetSpec
+            PetSpec.Builder builder = new PetSpec.Builder();
+
+            switch (choiceNum) {
+                case 1: // Nome
+                    String name = getUserInput("Enter pet name to search: ");
+                    builder.setName(new Name(name));
+                    break;
+                case 2: // Sobrenome
+                    String lastName = getUserInput("Enter pet last name to search: ");
+                    builder.setLastName(new LastName(lastName));
+                    break;
+                case 3: // Idade
+                    String ageStr = getUserInput("Enter pet age to search: ");
+                    try {
+                        Double age = Double.parseDouble(ageStr);
+                        builder.setAge(new Age(age));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid age format. Please enter a number.");
+                        continue;
+                    }
+                    break;
+                case 4: // Peso
+                    String weightStr = getUserInput("Enter pet weight to search: ");
+                    try {
+                        Double weight = Double.parseDouble(weightStr);
+                        builder.setWeight(new Weight(weight));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid weight format. Please enter a number.");
+                        continue;
+                    }
+                    break;
+                case 5: // Raça
+                    String breed = getUserInput("Enter pet breed to search: ");
+                    builder.setBreed(new Breed(breed));
+                    break;
+                case 6: // Endereço
+                    String number = getUserInput("Enter pet address number to search: ");
+                    String street = getUserInput("Enter pet address street to search: ");
+                    String city = getUserInput("Enter pet address city to search: ");
+                    builder.setAddress(new Address(number, city, street));
+                    break;
+                case 7: // Busca avançada com múltiplos critérios
+                    System.out.println("\n=== Advanced Search ===");
+
+                    String advName = getUserInput("Enter pet name (leave empty to skip): ");
+                    if (!advName.isEmpty()) {
+                        builder.setName(new Name(advName));
+                    }
+
+                    String advLastName = getUserInput("Enter pet last name (leave empty to skip): ");
+                    if (!advLastName.isEmpty()) {
+                        builder.setLastName(new LastName(advLastName));
+                    }
+
+                    String advAge = getUserInput("Enter pet age (leave empty to skip): ");
+                    if (!advAge.isEmpty()) {
+                        try {
+                            Double age = Double.parseDouble(advAge);
+                            builder.setAge(new Age(age));
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid age format. Skipping age filter.");
+                        }
+                    }
+
+                    String advWeight = getUserInput("Enter pet weight (leave empty to skip): ");
+                    if (!advWeight.isEmpty()) {
+                        try {
+                            Double weight = Double.parseDouble(advWeight);
+                            builder.setWeight(new Weight(weight));
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid weight format. Skipping weight filter.");
+                        }
+                    }
+
+                    String advBreed = getUserInput("Enter pet breed (leave empty to skip): ");
+                    if (!advBreed.isEmpty()) {
+                        builder.setBreed(new Breed(advBreed));
+                    }
+
+                    String AdNumber = getUserInput("Enter pet address number to search: ");
+                    String AdStreet = getUserInput("Enter pet address street to search: ");
+                    String AdCity = getUserInput("Enter pet address city to search: ");
+                    if (!(AdNumber.isEmpty() && AdStreet.isEmpty() && AdCity.isEmpty())) {
+                        builder.setAddress(new Address(AdNumber, AdCity, AdStreet));
+                    }
+                    break;
+                default:
                     System.out.println("Invalid choice.");
-                    yield null;
-                }
-            };
+                    continue;
+            }
+
+            // Construir o PetSpec com os filtros e realizar a busca
+            PetSpec petSpec = builder.build();
+            return petService.findPetBySpec(petSpec);
         }
     }
 

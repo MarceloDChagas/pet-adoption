@@ -1,5 +1,6 @@
 package service;
 
+import model.IE.PetSpec;
 import model.PetModel;
 import model.VO.*;
 import repository.File.PetFileDAO;
@@ -38,12 +39,8 @@ public class PetService implements IPetService {
         repository.savePetToFile(updatedPet);
     }
 
-    public List<PetModel> findPet(String filter) {
-        return parsePetData(repository.getPetByFilter(filter));
-    }
-
-    public List<PetModel> findPet(String filter, String secondFilter) {
-        return parsePetData(repository.getPetByFilter(filter, secondFilter));
+    public List<PetModel> findPetBySpec(PetSpec petSpec) {
+        return parsePetData(repository.getPetByFilter(petSpec));
     }
 
     public List<PetModel> findAllPets() {
@@ -77,15 +74,6 @@ public class PetService implements IPetService {
             }
         }
         return null;
-    }
-
-    public void updatePetDetails(PetModel pet, String name, String lastName, String breed, Double age, Double weight, Address address) {
-        if (name != null && !name.isEmpty()) pet.setName(new Name(name));
-        if (lastName != null && !lastName.isEmpty()) pet.setLastName(new LastName(lastName));
-        if (breed != null && !breed.isEmpty()) pet.setBreed(new Breed(breed));
-        if (age != null) pet.setAge(new Age(age));
-        if (weight != null) pet.setWeight(new Weight(weight));
-        if (address != null) pet.setAdress(address);
     }
 
     public List<PetModel> parsePetData(Map<String, List<String>> filesData) {

@@ -1,22 +1,21 @@
 package view;
 
 import DI.DependencyContainer;
+import model.IE.PetSpec;
 import model.PetModel;
 import model.VO.*;
 import service.interfaces.IPetService;
-import java.util.List;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Order;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
+
+import org.junit.jupiter.api.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CLIInterfaceTest {
     private static IPetService petService;
-    private static PetModel testPet;
+    private PetModel testPet;
 
     @BeforeAll
     static void setup() {
@@ -25,17 +24,7 @@ public class CLIInterfaceTest {
 
     @BeforeEach
     void addTestPet() {
-        testPet = new PetModel(
-                new Name("Rex"),
-                new LastName("Silva"),
-                PetType.DOG,
-                PetSex.MALE,
-                new Age(3.0),
-                new Weight(15.2),
-                new Address("12", "São Paulo", "Rua A"),
-                new Breed("Labrador")
-        );
-
+        testPet = createTestPet();
         petService.createPet(
                 testPet.getName(),
                 testPet.getLastName(),
@@ -56,7 +45,7 @@ public class CLIInterfaceTest {
     @Test
     @Order(1)
     void testAddPet() {
-        List<PetModel> pets = petService.findPet("Rex");
+        List<PetModel> pets = petService.findPetBySpec(buildPetSpec("Rex"));
         assertFalse(pets.isEmpty(), "Pet should be added successfully.");
         assertEquals("Rex", pets.getFirst().getName(), "The pet name should be Rex.");
     }
@@ -71,9 +60,8 @@ public class CLIInterfaceTest {
     @Test
     @Order(3)
     void testFindPetByFilter() {
-        List<PetModel> pets = petService.findPet("This pet doesnt exist", "This pet doesnt exist");
-        System.out.println(pets);
-        assertTrue(pets.isEmpty(), "No pet should be found with the non-existing name and breed.");
+        List<PetModel> pets = petService.findPetBySpec(buildPetSpec("UNNAMED PET"));
+        assertTrue(pets.isEmpty(), "No pet should be found with the non-existing name.");
     }
 
     @Test
@@ -81,5 +69,22 @@ public class CLIInterfaceTest {
     void testDeletePet() {
         boolean deleted = petService.deletePetByNameAndLastName(testPet.getName(), testPet.getLastName());
         assertTrue(deleted, "Pet should be deleted successfully.");
+    }
+
+    private PetModel createTestPet() {
+        return new PetModel(
+                new Name("Rex"),
+                new LastName("Silva"),
+                PetType.DOG,
+                PetSex.MALE,
+                new Age(3.0),
+                new Weight(15.2),
+                new Address("12", "São Paulo", "Rua A"),
+                new Breed("Labrador")
+        );
+    }
+
+    private PetSpec buildPetSpec(String name) {
+        return new PetSpec.Builder().setName(new Name(name)).build();
     }
 }
