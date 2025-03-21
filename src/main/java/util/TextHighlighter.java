@@ -12,7 +12,7 @@ public class TextHighlighter {
 
         Pattern pattern = Pattern.compile(Pattern.quote(term), Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(text);
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         while (matcher.find()) {
             matcher.appendReplacement(sb, ANSI_BOLD + matcher.group() + ANSI_RESET);
         }

@@ -44,11 +44,6 @@ public class PetFileDAO implements IPetDAO {
         return fileManage.loadFilesToMap(petsFilePath);
     }
 
-    /**
-     * Filtra os pets baseado nos parâmetros do PetSpec.
-     * @param petSpec O objeto PetSpec contendo os parâmetros de filtro
-     * @return Um mapa contendo os pets filtrados
-     */
     public Map<String, List<String>> getPetByFilter(PetSpec petSpec) {
         Map<String, List<String>> filesData = fileManage.loadFilesToMap(petsFilePath);
         Map<String, List<String>> filesDataFiltered = new HashMap<>();
@@ -64,21 +59,13 @@ public class PetFileDAO implements IPetDAO {
         return filesDataFiltered;
     }
 
-    /**
-     * Verifica se uma linha corresponde a qualquer um dos parâmetros do PetSpec.
-     * @param line A linha a ser verificada
-     * @param petSpec O objeto PetSpec contendo os parâmetros de filtro
-     * @return true se a linha corresponder a algum dos parâmetros, false caso contrário
-     */
     private boolean matchesAnyParameter(String line, PetSpec petSpec) {
         if (petSpec == null) {
             return false;
         }
 
-        // Convertemos a linha para minúsculo para fazer comparações case-insensitive
         String lowerCaseLine = line.toLowerCase();
 
-        // Verifica nome
         if (petSpec.getName() != null && petSpec.getName().getName() != null) {
             String name = petSpec.getName().getName().toLowerCase();
             if (!name.isEmpty() && lowerCaseLine.contains(name)) {
@@ -86,7 +73,6 @@ public class PetFileDAO implements IPetDAO {
             }
         }
 
-        // Verifica sobrenome
         if (petSpec.getLastName() != null && petSpec.getLastName().getLastName() != null) {
             String lastName = petSpec.getLastName().getLastName().toLowerCase();
             if (!lastName.isEmpty() && lowerCaseLine.contains(lastName)) {
@@ -94,7 +80,6 @@ public class PetFileDAO implements IPetDAO {
             }
         }
 
-        // Verifica idade
         if (petSpec.getAge() != null && petSpec.getAge().getAge() != null) {
             String age = petSpec.getAge().getAge().toString().toLowerCase();
             if (!age.isEmpty() && lowerCaseLine.contains(age)) {
@@ -102,7 +87,6 @@ public class PetFileDAO implements IPetDAO {
             }
         }
 
-        // Verifica peso
         if (petSpec.getWeight() != null && petSpec.getWeight().getWeight() != null) {
             String weight = petSpec.getWeight().getWeight().toString().toLowerCase();
             if (!weight.isEmpty() && lowerCaseLine.contains(weight)) {
@@ -110,7 +94,6 @@ public class PetFileDAO implements IPetDAO {
             }
         }
 
-        // Verifica raça
         if (petSpec.getBreed() != null && petSpec.getBreed().getBreed() != null) {
             String breed = petSpec.getBreed().getBreed().toLowerCase();
             if (!breed.isEmpty() && lowerCaseLine.contains(breed)) {
@@ -118,7 +101,6 @@ public class PetFileDAO implements IPetDAO {
             }
         }
 
-        // Verifica endereço
         if (petSpec.getAddress() != null) {
             String address = petSpec.getAddress().toString().toLowerCase();
             if (!address.isEmpty() && lowerCaseLine.contains(address)) {
@@ -128,7 +110,6 @@ public class PetFileDAO implements IPetDAO {
 
         return false;
     }
-
 
     public Map<String, List<String>> getPetByFilter(String filter, String secondFilter) {
         Map<String, List<String>> filesData = fileManage.loadFilesToMap(petsFilePath);
@@ -157,14 +138,6 @@ public class PetFileDAO implements IPetDAO {
         return filesDataFiltered;
     }
 
-    private void listPet(Map<String, List<String>> filesData) {
-        for (Map.Entry<String, List<String>> entry : filesData.entrySet()) {
-            for (String line : entry.getValue()) {
-                System.out.println(line);
-            }
-        }
-    }
-
     public Map<String, List<String>> getPetByDateWithFilter(String date, String filter) {
         Map<String, List<String>> filesData = fileManage.loadFilesToMap(petsFilePath);
         Map<String, List<String>> filesDataFiltered = new HashMap<>();
@@ -179,7 +152,6 @@ public class PetFileDAO implements IPetDAO {
                 }
             }
         }
-        listPet(filesDataFiltered);
         return filesDataFiltered;
     }
 
@@ -197,32 +169,19 @@ public class PetFileDAO implements IPetDAO {
                 }
             }
         }
-        listPet(filesDataFiltered);
         return filesDataFiltered;
     }
-
 
     public void deletePetFile(String fileName) {
         String fullPath = petsFilePath + fileName;
         File file = new File(fullPath);
 
         if (file.exists()) {
-            boolean deleted = file.delete();
-            if (deleted) {
-                System.out.println("Arquivo deletado com sucesso: " + fileName);
-            } else {
-                System.out.println("Falha ao deletar o arquivo: " + fileName);
-            }
-        } else {
-            System.out.println("Arquivo não encontrado: " + fileName);
+            file.delete();
         }
     }
 
     public List<String> getAllFileNames() {
-        System.out.println("Buscando arquivos no diretório: " + petsFilePath);
-        for (String fileName : fileManage.getAllFileNames(petsFilePath)) {
-            System.out.println(fileName);
-        }
         return fileManage.getAllFileNames(petsFilePath);
     }
 }

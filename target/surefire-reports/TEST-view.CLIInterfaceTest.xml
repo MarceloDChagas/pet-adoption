@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="view.CLIInterfaceTest" time="0.063" tests="4" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="view.CLIInterfaceTest" time="0.068" tests="4" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="24"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="BR"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-24\bin"/>
-    <property name="sun.java.command" value="C:\Users\Telo\AppData\Local\Temp\surefire1507787013277196707\surefirebooter-20250321164929551_3.jar C:\Users\Telo\AppData\Local\Temp\surefire1507787013277196707 2025-03-21T16-49-29_447-jvmRun1 surefire-20250321164929551_1tmp surefire_0-20250321164929551_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Telo\AppData\Local\Temp\surefire14705542934905655686\surefirebooter-20250321175547638_3.jar C:\Users\Telo\AppData\Local\Temp\surefire14705542934905655686 2025-03-21T17-55-47_481-jvmRun1 surefire-20250321175547638_1tmp surefire_0-20250321175547638_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\Telo\IdeaProjects\pet-adoption\target\test-classes;C:\Users\Telo\IdeaProjects\pet-adoption\target\classes;C:\Users\Telo\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\Telo\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;C:\Users\Telo\.m2\repository\com\zaxxer\HikariCP\5.0.1\HikariCP-5.0.1.jar;C:\Users\Telo\.m2\repository\org\flywaydb\flyway-core\9.20.0\flyway-core-9.20.0.jar;C:\Users\Telo\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\Telo\.m2\repository\org\flywaydb\flyway-mysql\9.20.0\flyway-mysql-9.20.0.jar;C:\Users\Telo\.m2\repository\org\slf4j\slf4j-api\2.0.7\slf4j-api-2.0.7.jar;C:\Users\Telo\.m2\repository\ch\qos\logback\logback-classic\1.4.11\logback-classic-1.4.11.jar;C:\Users\Telo\.m2\repository\ch\qos\logback\logback-core\1.4.11\logback-core-1.4.11.jar;C:\Users\Telo\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.0\junit-jupiter-api-5.10.0.jar;C:\Users\Telo\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Telo\.m2\repository\org\junit\platform\junit-platform-commons\1.10.0\junit-platform-commons-1.10.0.jar;C:\Users\Telo\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Telo\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.0\junit-jupiter-engine-5.10.0.jar;C:\Users\Telo\.m2\repository\org\junit\platform\junit-platform-engine\1.10.0\junit-platform-engine-1.10.0.jar;C:\Users\Telo\.m2\repository\org\mockito\mockito-core\5.10.0\mockito-core-5.10.0.jar;C:\Users\Telo\.m2\repository\net\bytebuddy\byte-buddy\1.14.11\byte-buddy-1.14.11.jar;C:\Users\Telo\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.11\byte-buddy-agent-1.14.11.jar;C:\Users\Telo\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\Telo\.m2\repository\org\mockito\mockito-junit-jupiter\5.10.0\mockito-junit-jupiter-5.10.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Telo\AppData\Local\Temp\surefire1507787013277196707\surefirebooter-20250321164929551_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Telo\AppData\Local\Temp\surefire14705542934905655686\surefirebooter-20250321175547638_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="24+36-3646"/>
@@ -58,56 +58,8 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="68.0"/>
   </properties>
-  <testcase name="testAddPet" classname="view.CLIInterfaceTest" time="0.027">
-    <system-out><![CDATA[Lendo arquivo: 20250317T1436-D ASDA SILVA.TXT
-Lendo arquivo: 20250317T1808-DKASIGORAASFADO.TXT
-Lendo arquivo: 20250318T1409-JOSAOCARVALHO.TXT
-Lendo arquivo: 20250321T1649-REXREX.TXT
-Buscando arquivos no diretório: C:\Users\Telo\IdeaProjects\pet-adoption\src\petsCadastrados\
-20250317T1436-D ASDA SILVA.TXT
-20250317T1808-DKASIGORAASFADO.TXT
-20250318T1409-JOSAOCARVALHO.TXT
-20250321T1649-REXREX.TXT
-Arquivo deletado com sucesso: 20250321T1649-REXREX.TXT
-]]></system-out>
-  </testcase>
-  <testcase name="testFindAllPets" classname="view.CLIInterfaceTest" time="0.008">
-    <system-out><![CDATA[Lendo arquivo: 20250317T1436-D ASDA SILVA.TXT
-Lendo arquivo: 20250317T1808-DKASIGORAASFADO.TXT
-Lendo arquivo: 20250318T1409-JOSAOCARVALHO.TXT
-Lendo arquivo: 20250321T1649-REXREX.TXT
-Buscando arquivos no diretório: C:\Users\Telo\IdeaProjects\pet-adoption\src\petsCadastrados\
-20250317T1436-D ASDA SILVA.TXT
-20250317T1808-DKASIGORAASFADO.TXT
-20250318T1409-JOSAOCARVALHO.TXT
-20250321T1649-REXREX.TXT
-Arquivo deletado com sucesso: 20250321T1649-REXREX.TXT
-]]></system-out>
-  </testcase>
-  <testcase name="testFindPetByFilter" classname="view.CLIInterfaceTest" time="0.006">
-    <system-out><![CDATA[Lendo arquivo: 20250317T1436-D ASDA SILVA.TXT
-Lendo arquivo: 20250317T1808-DKASIGORAASFADO.TXT
-Lendo arquivo: 20250318T1409-JOSAOCARVALHO.TXT
-Lendo arquivo: 20250321T1649-REXREX.TXT
-Buscando arquivos no diretório: C:\Users\Telo\IdeaProjects\pet-adoption\src\petsCadastrados\
-20250317T1436-D ASDA SILVA.TXT
-20250317T1808-DKASIGORAASFADO.TXT
-20250318T1409-JOSAOCARVALHO.TXT
-20250321T1649-REXREX.TXT
-Arquivo deletado com sucesso: 20250321T1649-REXREX.TXT
-]]></system-out>
-  </testcase>
-  <testcase name="testDeletePet" classname="view.CLIInterfaceTest" time="0.005">
-    <system-out><![CDATA[Buscando arquivos no diretório: C:\Users\Telo\IdeaProjects\pet-adoption\src\petsCadastrados\
-20250317T1436-D ASDA SILVA.TXT
-20250317T1808-DKASIGORAASFADO.TXT
-20250318T1409-JOSAOCARVALHO.TXT
-20250321T1649-REXREX.TXT
-Arquivo deletado com sucesso: 20250321T1649-REXREX.TXT
-Buscando arquivos no diretório: C:\Users\Telo\IdeaProjects\pet-adoption\src\petsCadastrados\
-20250317T1436-D ASDA SILVA.TXT
-20250317T1808-DKASIGORAASFADO.TXT
-20250318T1409-JOSAOCARVALHO.TXT
-]]></system-out>
-  </testcase>
+  <testcase name="testAddPet" classname="view.CLIInterfaceTest" time="0.036"/>
+  <testcase name="testFindAllPets" classname="view.CLIInterfaceTest" time="0.007"/>
+  <testcase name="testFindPetByFilter" classname="view.CLIInterfaceTest" time="0.005"/>
+  <testcase name="testDeletePet" classname="view.CLIInterfaceTest" time="0.004"/>
 </testsuite>

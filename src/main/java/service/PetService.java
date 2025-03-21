@@ -21,17 +21,12 @@ public class PetService implements IPetService {
     }
 
     public void createPet(String name, String lastName, PetType type, PetSex sex, String ageInput, String weightInput, Address address, String breed) {
-        // Convertendo os parâmetros para as classes VO correspondentes
         Name petName = new Name(name);
         LastName petLastName = new LastName(lastName);
         Age petAge = new Age(Double.parseDouble(ageInput));
         Weight petWeight = new Weight(Double.parseDouble(weightInput));
         Breed petBreed = new Breed(breed);
-
-        // Criando o PetModel com os objetos VO
         PetModel petModel = new PetModel(petName, petLastName, type, sex, petAge, petWeight, address, petBreed);
-
-        // Salvando o pet no repositório
         repository.savePetToFile(petModel);
     }
 
@@ -117,14 +112,12 @@ public class PetService implements IPetService {
             PetSex sex = PetSex.valueOf(extractValue(lines, "Sexo:").toUpperCase());
             Double age = Double.parseDouble(extractValue(lines, "Idade:"));
             Double weight = Double.parseDouble(extractValue(lines, "Peso:"));
-
             String addressLine = extractValue(lines, "Endereço:");
             String[] addressParts = addressLine.split(",");
             String street = addressParts[0].trim();
             String houseNumber = addressParts.length > 1 ? addressParts[1].trim() : Constants.DEFAULT_UNINFORMED;
             String city = addressParts.length > 2 ? addressParts[2].trim() : Constants.DEFAULT_UNINFORMED;
 
-            // Usando os objetos VO para construir o PetModel
             return new PetModel(new Name(name), new LastName(lastName), type, sex, new Age(age), new Weight(weight), new Address(houseNumber, city, street), new Breed(breed));
         } catch (Exception e) {
             System.out.println("Erro ao converter linhas para PetModel: " + lines);
@@ -135,7 +128,7 @@ public class PetService implements IPetService {
 
     public boolean deletePetByNameAndLastName(String name, String lastName) {
         PetModel petToFind = new PetModel(new Name(name), new LastName(lastName), null, null, new Age(10.0), new Weight(10.0), null, null);
-        String petFile = findPetFile(petToFind, (PetFileDAO)repository); // Cast if necessary
+        String petFile = findPetFile(petToFind, (PetFileDAO)repository);
         if (petFile != null) {
             repository.deletePetFile(petFile);
             return true;

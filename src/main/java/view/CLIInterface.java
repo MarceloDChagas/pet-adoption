@@ -204,39 +204,6 @@ public class CLIInterface {
         return petService.findPetBySpec(petSpec);
     }
 
-    private static List<PetModel> searchByOneFilter() {
-        System.out.println("\nChoose a filter:");
-        System.out.println("1. Name");
-        System.out.println("2. Breed");
-        System.out.print("Enter your choice: ");
-
-        String filterChoice = scanner.nextLine();
-        if (!StarterMenuValidator.validateMenu(filterChoice)) {
-            System.out.println("Invalid input! Please try again.");
-            return null;
-        }
-
-        PetSpec.Builder builder = new PetSpec.Builder();
-
-        switch (Integer.parseInt(filterChoice)) {
-            case 1 -> {
-                System.out.print("Enter pet name: ");
-                String name = scanner.nextLine().trim();
-                builder.setName(new Name(name));
-            }
-            case 2 -> {
-                System.out.print("Enter pet breed: ");
-                String breed = scanner.nextLine().trim();
-                builder.setBreed(new Breed(breed));
-            }
-            default -> {
-                System.out.println("Invalid choice.");
-                return null;
-            }
-        }
-
-        return petService.findPetBySpec(builder.build());
-    }
     private static List<PetModel> searchByTwoFilters() {
         System.out.println("\nChoose two filters:");
         System.out.println("1. Name and Breed");
@@ -266,23 +233,11 @@ public class CLIInterface {
                 System.out.print("Enter pet name: ");
                 String name = scanner.nextLine().trim();
                 builder.setName(new Name(name));
-
-                // Observação: Você precisará adaptar esta parte para guardar o tipo
-                // no objeto PetSpec. O PetSpec atual não tem um campo para tipo.
-                // Uma solução seria adicionar isso ao PetSpec ou tratar o tipo como
-                // uma string no método de filtragem.
-
-                // PetType type = selectPetType();
-                // builder.setType(new Type(type)); // Você precisa adicionar isso ao PetSpec
             }
             case 3 -> {
                 System.out.print("Enter pet breed: ");
                 String breed = scanner.nextLine().trim();
                 builder.setBreed(new Breed(breed));
-
-                // Mesmo comentário sobre o tipo do pet
-                // PetType type = selectPetType();
-                // builder.setType(new Type(type));
             }
             default -> {
                 System.out.println("Invalid choice.");
@@ -291,15 +246,6 @@ public class CLIInterface {
         }
 
         return petService.findPetBySpec(builder.build());
-    }
-
-    private static PetType selectPetType() {
-        System.out.println("Select pet type:");
-        for (PetType type : PetType.values()) {
-            System.out.println(type.ordinal() + 1 + ". " + type);
-        }
-        System.out.print("Enter pet type (number): ");
-        return PetType.values()[Integer.parseInt(scanner.nextLine().trim()) - 1];
     }
 
     private static void searchAndUpdatePet() {
@@ -347,19 +293,18 @@ public class CLIInterface {
                 return null;
             }
 
-            // Criar o Builder para o PetSpec
             PetSpec.Builder builder = new PetSpec.Builder();
 
             switch (choiceNum) {
-                case 1: // Nome
+                case 1:
                     String name = getUserInput("Enter pet name to search: ");
                     builder.setName(new Name(name));
                     break;
-                case 2: // Sobrenome
+                case 2:
                     String lastName = getUserInput("Enter pet last name to search: ");
                     builder.setLastName(new LastName(lastName));
                     break;
-                case 3: // Idade
+                case 3:
                     String ageStr = getUserInput("Enter pet age to search: ");
                     try {
                         Double age = Double.parseDouble(ageStr);
@@ -369,7 +314,7 @@ public class CLIInterface {
                         continue;
                     }
                     break;
-                case 4: // Peso
+                case 4:
                     String weightStr = getUserInput("Enter pet weight to search: ");
                     try {
                         Double weight = Double.parseDouble(weightStr);
@@ -379,17 +324,17 @@ public class CLIInterface {
                         continue;
                     }
                     break;
-                case 5: // Raça
+                case 5:
                     String breed = getUserInput("Enter pet breed to search: ");
                     builder.setBreed(new Breed(breed));
                     break;
-                case 6: // Endereço
+                case 6:
                     String number = getUserInput("Enter pet address number to search: ");
                     String street = getUserInput("Enter pet address street to search: ");
                     String city = getUserInput("Enter pet address city to search: ");
                     builder.setAddress(new Address(number, city, street));
                     break;
-                case 7: // Busca avançada com múltiplos critérios
+                case 7:
                     System.out.println("\n=== Advanced Search ===");
 
                     String advName = getUserInput("Enter pet name (leave empty to skip): ");
@@ -439,7 +384,6 @@ public class CLIInterface {
                     continue;
             }
 
-            // Construir o PetSpec com os filtros e realizar a busca
             PetSpec petSpec = builder.build();
             return petService.findPetBySpec(petSpec);
         }
@@ -448,18 +392,16 @@ public class CLIInterface {
     private static void updatePetDetails(PetModel pet) {
         System.out.println("\n=== Update Pet Details ===");
 
-        // Atualizando o nome e sobrenome
         String newName = getUpdatedValue("Enter new name", pet.getName());
         if (!newName.isEmpty()) {
-            pet.setName(new Name(newName)); // Atualiza o nome
+            pet.setName(new Name(newName));
         }
 
         String newLastName = getUpdatedValue("Enter new last name", pet.getLastName());
         if (!newLastName.isEmpty()) {
-            pet.setLastName(new LastName(newLastName)); // Atualiza o sobrenome
+            pet.setLastName(new LastName(newLastName));
         }
 
-        // Atualizando a raça
         String newBreed = getUpdatedValue("Enter new breed", pet.getBreed());
         if (!newBreed.isEmpty()) {
             pet.setBreed(new Breed(newBreed));
@@ -482,20 +424,19 @@ public class CLIInterface {
             } catch (NumberFormatException ignored) {}
         }
 
-        // Atualizando o endereço
         String newStreet = getUpdatedValue("Enter new address street", pet.getAdress().getStreet());
         if (!newStreet.isEmpty()) {
-            pet.getAdress().setStreet(newStreet); // Atualiza a rua
+            pet.getAdress().setStreet(newStreet);
         }
 
         String newHouseNumber = getUpdatedValue("Enter new address house number", pet.getAdress().getHouseNumber());
         if (!newHouseNumber.isEmpty()) {
-            pet.getAdress().setHouseNumber(newHouseNumber); // Atualiza o número da casa
+            pet.getAdress().setHouseNumber(newHouseNumber);
         }
 
         String newCity = getUpdatedValue("Enter new address city", pet.getAdress().getCity());
         if (!newCity.isEmpty()) {
-            pet.getAdress().setCity(newCity); // Atualiza a cidade
+            pet.getAdress().setCity(newCity);
         }
     }
 

@@ -80,7 +80,6 @@ public class FileManage implements IFileManage {
 
         for (File file : files) {
             if (file.isFile() && file.getName().toLowerCase().endsWith(".txt")) {
-                System.out.println("Lendo arquivo: " + file.getName());
                 fileContents.put(file.getName(), readFile(file.getAbsolutePath()));
             }
         }
